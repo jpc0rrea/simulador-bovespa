@@ -1,10 +1,5 @@
 tasks:
-  - init: echo "Replace me with a build script for the project."
-    command: echo "Replace me with something that should run on every start, or just
-      remove me entirely."
+  - init: cd simuladorBovespa-functions && cd functions && npm install
   - before: npm i -g firebase-tools
-  - before: cd simuladorBovespa-functions
-  - before: cd functions
-  - before: npm install
 image:
   file: .gitpod.Dockerfile
