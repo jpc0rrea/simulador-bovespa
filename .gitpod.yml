@@ -3,5 +3,8 @@ tasks:
     command: echo "Replace me with something that should run on every start, or just
       remove me entirely."
   - before: npm i -g firebase-tools
+  - before: cd simuladorBovespa-functions
+  - before: cd functions
+  - before: npm install
 image:
   file: .gitpod.Dockerfile
