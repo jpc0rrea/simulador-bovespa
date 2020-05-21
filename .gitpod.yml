@@ -1,5 +1,5 @@
 tasks:
   - init: cd simuladorBovespa-functions && cd functions && npm install
-  - before: npm i -g firebase-tools
+  - before: npm i -g firebase-tools && firebase login --no-localhost
 image:
   file: .gitpod.Dockerfile
