@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "simulador-bovespa-293b3",
+  "private_key_id": "aa447164afcc21f8add91576bcdeebf568af7d12",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCUEclYD6zhUIwp\nG+pA5GFmO6Xy1dF3t0Y4LYBheJOBPLQIN90tdcPRHRyOKKyD1fmBsqP7ji6JKao2\naqr7AU1S8jgZunuObvYcAiP1DtEbkDBOY0Opf352Z7KQYUjHQhULVu+ZYtrAkN29\n92GHhsV9OJBJbpzny+YGw2KHtUkwSuy5hPK4NKkvJchlj08VLTFTUC/1ZkAlKA1m\ndzLPsWJi2DM+XKXPXFLCpo6na/R0aekhem1RW/jZRevfOLfSGsm4Ng+Fmigc5EFr\n6VL1hTc5aNe6wh6hCENsQoPsbOLIXIAZDCed8RehlkIqIiOeSVa5JGY0dy1CZy5m\nzMWk4B5VAgMBAAECggEAA5YofAiUR43GeSHGhgrCIotAcXRd+mvRuJu+4KvCBD8L\nK/50o2PQFlPW+Dr+4BhpFcTU+SDMpVKPmF0saYNkcxceO6XAnKMqwysjcA2ZffTe\n7cjthsC+1OMrsRi2mniK9/OuWyxzfD5igmfL7RcF2Ar6mC6IR4rbmdvkmk9cnQh6\nIxgb2yQaAu/L643U0PLiMT2Ed5tqUUssvDN3vnCx83Is5Kck11ZTa5S5G7vBODeJ\n9vthQYq1jxBAyGEOvtCONc4fVviKYf4vg7bimfMxwfhoCU5AAu7lHsv+KKmDUBBZ\nWU2IDgChl8qmJpN1K/SgM9aFOLxPDjSKXYI0+DYMVQKBgQDHSyhJQJXcCn972UIP\n8y2psKNZXgBNbqOKdJnTWic+MYGxzhx2VbPYDV/ClxHRgIam2NGNj4zt7DbKD3wn\nds92kCB/bdxgJxTN+BqmBiM55vV/gGYWcK6xTz5YMwU99BpBjGW1PZLO+ciKpOXn\nQAMwGVynJktu8RQTBKyES0nhMwKBgQC+M2ODzGGRSiFHMAtRpGKKwE4iCybsYYXi\n9mtLntMPVLTTur/YkKyalQAWZ8McKoq7DzGNj2RbuIjpjaS684i6JaW/JjiEzj6W\nrZnxzdrFUYc3DcASrWradrcllIKUSXtNNYOy+chM7G2FuYxoU7weMwrb5gUSyqlT\n7QI8jVUSVwKBgE7y3RC3vyYeGoaLeHotEYfJa8x5SpFiJPMyYcWyTx16KzCuv+O4\n67fJBIhnpC1kRvNNrSXxGhkenE3LeJmBnYoQam9QrB6DHODDSns+rzG+5r4NtWNq\nXCnthHsYKxlx2/zfi2MS81d+6AzUaicD2r9xLJ0itHtMkXE/RsBZuvi1AoGBAIFP\nVrzoWvz4NR+83jUnWYeTroseodvbgbcIaXIEDOJDaJz6PivyUCbYXjLdYJzpn2AF\nuF7Ruh1RnGOM1Q31PGOx7LnENnCz94FhjWQD3FSCVTdstcT8+cSFKYb3LL+8JYQc\neelYQIFrzBo6R+c15pNxiFRwUcqw1eYlIHwialAJAoGAejWfhQtQBbF2qaWeLyvx\nydil6f9rErLranJg0Ek6EI1fWikpkWUggaORTJBYtpLg/5bYGElUGIHlf3r6CNmm\nQ5ISjFDHDVM8GhHFkHiIvZbBppAb2ejdPcmqj4beyAxo52sxdSMsldn25GhTAJhQ\nE2aKPtftBCzwc/WNgC0D5bM=\n-----END PRIVATE KEY-----\n",
+  "client_email": "proprietario@simulador-bovespa-293b3.iam.gserviceaccount.com",
+  "client_id": "113486708216339410575",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/proprietario%40simulador-bovespa-293b3.iam.gserviceaccount.com"
+}

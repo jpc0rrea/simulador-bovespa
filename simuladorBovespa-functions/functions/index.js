@@ -8,6 +8,10 @@ admin.initializeApp();
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
+exports.helloWorld = functions.https.onRequest((req, res) => {
+  return res.json('Hello World!')
+});
+
 exports.getTransactions = functions.https.onRequest((req, res) => {
   admin
     .firestore()
