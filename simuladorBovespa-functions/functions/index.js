@@ -2,34 +2,45 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const { getPrice } = require('./utils/yahooFinance')
 
+const express = require('express')
+const app = express()
 
 admin.initializeApp();
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-exports.helloWorld = functions.https.onRequest((req, res) => {
-  return res.json('Hello World!')
-});
-
-exports.getTransactions = functions.https.onRequest((req, res) => {
-  admin
+app.get('/transactions', (req, res) => {
+    admin
     .firestore()
     .collection("transactions")
     .get()
     .then((data) => {
       let transactions = [];
       data.forEach((doc) => {
-        transactions.push(doc.data());
+        transactions.push({
+            transactionId: doc.id,
+            commentCount: doc.data().commentCount,
+            companyName: doc.data().companyName,
+            price: doc.data().price,
+            quantity: doc.data().quantity,
+            symbol: doc.data().symbol,
+            total: doc.data().total,
+            transactedAt: doc.data().transactedAt,
+            type: doc.data().type,
+            userId: doc.data().userId,
+        });
       });
       return res.json(transactions);
     })
     .catch((err) => {
       console.error(err);
     });
-});
+})
 
-exports.buyOneSymbol = functions.https.onRequest((req, res) => {
+
+
+// // Create and Deploy Your First Cloud Functions
+// // https://firebase.google.com/docs/functions/write-firebase-functions
+
+app.post('/buySymbol', (req, res) => {
     let quantity = req.body.quantity
     if (parseInt(quantity) === NaN) {
         return res.status(400).json({ quantity: "Deve ser um número inteiro positivo" })
@@ -80,3 +91,7 @@ exports.buyOneSymbol = functions.https.onRequest((req, res) => {
             res.status(500).json({ error: err })
         })
 });
+
+// https://baseurl.com/api
+
+exports.api = functions.https.onRequest(app)
