@@ -11,6 +11,7 @@ app.get('/transactions', (req, res) => {
     admin
     .firestore()
     .collection("transactions")
+    .orderBy('transactedAt', 'desc')
     .get()
     .then((data) => {
       let transactions = [];
