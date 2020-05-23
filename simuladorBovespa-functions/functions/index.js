@@ -1,6 +1,6 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
-const { getPrice } = require('./utils/yahooFinance')
+const { getPrice, round } = require('./utils/yahooFinance')
 
 const express = require('express')
 const app = express()
@@ -61,7 +61,7 @@ app.post('/buySymbol', (req, res) => {
             price = data.price;
             companyName = data.name;
             symbol = data.symbol;
-            total = parseInt(quantity) * price
+            total = round(parseInt(quantity) * price)
         })
         .then(() => {
             newTransaction = { 

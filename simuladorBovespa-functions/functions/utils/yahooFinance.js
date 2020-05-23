@@ -32,5 +32,8 @@ const getPrice = (symbol) => {
     })
 }
 
+const round = (number) => {
+    return Math.round(number * 100) / 100
+}
 // getPrice("ITSA4").then((data) => console.log(data));
-module.exports = { getPrice }
+module.exports = { getPrice, round }
