@@ -111,11 +111,27 @@ app.post('/buySymbol', (req, res) => {
 
 // signup route
 app.post('/signup', (req, res) => {
+    let password = req.body.password
+    let confirmPassword = req.body.confirmPassword
+
+    if (password !== confirmPassword) {
+        return res.status(400).json({ message: "Confirmação de senha diferente da senha original." })
+    }
+    
     const newUser = {
         email: req.body.email,
-        password: req.body.password,
-        confirmPassword: req.body.confirmPassword
+        password,
+        confirmPassword
     }
+
+    firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password)
+        .then(data => {
+            return res.status(201).json({ message: `Usuário ${data.user.uid} registrado com sucesso.` })
+        })
+        .catch(err => {
+            console.error(err)
+            return res.status(500).json({ error: err.code })
+        })
 })
 
 exports.api = functions.https.onRequest(app)
