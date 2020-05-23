@@ -109,4 +109,13 @@ app.post('/buySymbol', (req, res) => {
 
 // https://baseurl.com/api
 
+// signup route
+app.post('/signup', (req, res) => {
+    const newUser = {
+        email: req.body.email,
+        password: req.body.password,
+        confirmPassword: req.body.confirmPassword
+    }
+})
+
 exports.api = functions.https.onRequest(app)
