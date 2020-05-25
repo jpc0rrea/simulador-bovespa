@@ -22,7 +22,38 @@ const config = {
 const firebase = require("firebase");
 firebase.initializeApp(config);
 
-app.get("/transactions", (req, res) => {
+const FBAuth = (req, res, next) => {
+  let idToken;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer ")
+  ) {
+    idToken = req.headers.authorization.split("Bearer ")[1];
+  } else {
+    console.error("Nenhum token encontrado");
+    return res.status(403).json({ error: "Não autorizado" });
+  }
+
+  admin
+    .auth()
+    .verifyIdToken(idToken) // estamos verificando o idToken
+    .then((decodedToken) => {
+      // e enviar para o nosso req informações sobre o usuário
+      req.user = decodedToken;
+      console.log(decodedToken);
+      return db.doc(`/users/${req.user.uid}`).get();
+    })
+    .then((data) => {
+      req.user.email = data.data().email;
+      return next(); // next() deixa a requisição continuar
+    })
+    .catch((err) => {
+      console.error("Erro ao verificar token, ", err);
+      return res.status(403).json(err);
+    });
+};
+
+app.get("/getAllTransactions", FBAuth, (req, res) => {
   db.collection("transactions")
     .orderBy("transactedAt", "desc")
     .get()
@@ -52,7 +83,7 @@ app.get("/transactions", (req, res) => {
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 
-app.post("/buySymbol", (req, res) => {
+app.post("/buySymbol", FBauth, (req, res) => {
   let quantity = req.body.quantity;
   if (parseInt(quantity) === NaN) {
     return res
@@ -80,7 +111,7 @@ app.post("/buySymbol", (req, res) => {
     })
     .then(() => {
       newTransaction = {
-        userId: "#TODO",
+        userId: req.user.uid,
         type: "Compra",
         total,
         symbol,
@@ -208,7 +239,7 @@ app.post("/login", (req, res) => {
   if (isEmpty(user.password))
     errors.password = "Campo 'senha' não pode estar vazio";
   if (!isEmail(user.email)) {
-      errors.email = "E-mail inválido"
+    errors.email = "E-mail inválido";
   }
 
   if (Object.keys(errors).length > 0) {
