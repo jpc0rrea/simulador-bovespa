@@ -40,7 +40,6 @@ const FBAuth = (req, res, next) => {
     .then((decodedToken) => {
       // e enviar para o nosso req informações sobre o usuário
       req.user = decodedToken;
-      console.log(decodedToken);
       return db.doc(`/users/${req.user.uid}`).get();
     })
     .then((data) => {
@@ -84,7 +83,7 @@ app.get("/getAllTransactions", FBAuth, (req, res) => {
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 
-app.post("/buySymbol", FBauth, (req, res) => {
+app.post("/buySymbol", FBAuth, (req, res) => {
   let quantity = req.body.quantity;
   if (parseInt(quantity) === NaN) {
     return res
@@ -124,7 +123,6 @@ app.post("/buySymbol", FBauth, (req, res) => {
       };
     })
     .then(() => {
-      console.log(newTransaction);
       db.collection("transactions")
         .add(newTransaction)
         .then((doc) => {
