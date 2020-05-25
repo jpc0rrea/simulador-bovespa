@@ -3,3 +3,7 @@ tasks:
   - before: npm i -g firebase-tools && export GOOGLE_APPLICATION_CREDENTIALS="/workspace/simulador-bovespa/simuladorBovespa-functions/Simulador Bovespa-aa447164afcc.json" && firebase login --no-localhost 
 image:
   file: .gitpod.Dockerfile
+
+vscode:
+  extensions:
+    - esbenp.prettier-vscode@4.7.0:kgoYSh1LwTixKtJtQWtodQ==
