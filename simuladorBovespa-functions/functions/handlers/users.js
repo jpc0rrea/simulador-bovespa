@@ -15,16 +15,15 @@ exports.signup = (req, res) => {
   let confirmPassword = req.body.confirmPassword;
   let email = req.body.email;
 
-  const { valid, errors } = validateSignupData(newUser);
-
-  if (!valid) return res.status(400).json(errors);
-
   const newUser = {
     email,
     password,
     confirmPassword,
   };
 
+  const { valid, errors } = validateSignupData(newUser);
+
+  if (!valid) return res.status(400).json(errors);
   let token, userId;
 
   firebase
