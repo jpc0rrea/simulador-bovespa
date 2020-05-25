@@ -55,6 +55,7 @@ const FBAuth = (req, res, next) => {
 
 app.get("/getAllTransactions", FBAuth, (req, res) => {
   db.collection("transactions")
+    .where("userId", "==", req.user.uid)
     .orderBy("transactedAt", "desc")
     .get()
     .then((data) => {
