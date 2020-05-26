@@ -1,6 +1,6 @@
 const { db } = require("../utils/admin");
 
-const { getPrice, round } = require("../utils/yahooFinance");
+const { getPrice, round, real } = require("../utils/finance");
 
 exports.getAllTransactions = (req, res) => {
   db.collection("transactions")
@@ -45,7 +45,7 @@ exports.buySymbol = (req, res) => {
 
   // checando se o usuário deixou o campo symbol vazio
   if (req.body.symbol.trim() === "") {
-    return res.status(400).json({ symbol: "Must not be empty" });
+    return res.status(400).json({ symbol: "Não pode estar vazio" });
   }
 
   let price;
@@ -143,7 +143,7 @@ exports.sellSymbol = (req, res) => {
 
   // checando se o usuário deixou o campo symbol vazio
   if (req.body.symbol.trim() === "") {
-    return res.status(400).json({ symbol: "Must not be empty" });
+    return res.status(400).json({ symbol: "Não pode estar vazio" });
   }
 
   // checando se a quantidade é um inteiro maior que zero
@@ -334,6 +334,32 @@ exports.commentOnTransaction = (req, res) => {
     })
     .then(() => {
       return res.json(newComment);
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
+
+exports.getSymbolQuote = (req, res) => {
+  let symbol = req.body.symbol.trim();
+  if (symbol === "") {
+    return res.status(400).json({ symbol: "Não pode estar vazio" });
+  }
+
+  let companyInformation = {};
+  getPrice(symbol)
+    .then((companyData) => {
+      companyInformation.price = companyData.price;
+      companyInformation.name = companyData.name;
+      companyInformation.symbol = companyData.symbol;
+    })
+    .then(() => {
+      return res.json({
+        message: `Uma ação de ${companyInformation.name} (${
+          companyInformation.symbol
+        }) está custando ${real(companyInformation.price)}`,
+      });
     })
     .catch((err) => {
       console.error(err);

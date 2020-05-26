@@ -42,7 +42,7 @@ const real = (number) => {
 
   number = number.replace(/\./g, "v");
   number = number.replace(/\,/g, ".");
-  number = number.replace(/\v/g, ",");
+  number = number.replace(/v/g, ",");
   return number;
 };
 // getPrice("ITSA4").then((data) => console.log(data));
