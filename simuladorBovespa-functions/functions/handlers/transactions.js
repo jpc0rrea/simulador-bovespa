@@ -43,6 +43,11 @@ exports.buySymbol = (req, res) => {
       .json({ quantity: "Deve ser um número inteiro positivo" });
   }
 
+  // checando se o usuário deixou o campo symbol vazio
+  if (req.body.symbol.trim() === "") {
+    return res.status(400).json({ symbol: "Must not be empty" });
+  }
+
   let price;
   let companyName;
   let symbol;
@@ -130,4 +135,36 @@ exports.buySymbol = (req, res) => {
       console.error(err);
       res.status(500).json({ error: err });
     });
+};
+
+exports.sellSymbol = (req, res) => {
+  // garantir que eu tenho o symbol que estou tentando vender
+  // na quantidade certa e mudar o saldo do usuário
+
+  // checando se o usuário deixou o campo symbol vazio
+  if (req.body.symbol.trim() === "") {
+    return res.status(400).json({ symbol: "Must not be empty" });
+  }
+
+  // checando se a quantidade é um inteiro maior que zero
+  // função para comprar alguma ação para o usuário
+  let quantity = req.body.quantity;
+  if (parseInt(quantity) === NaN) {
+    return res
+      .status(400)
+      .json({ quantity: "Deve ser um número inteiro positivo" });
+  } else if (parseInt(quantity) < 0) {
+    return res
+      .status(400)
+      .json({ quantity: "Deve ser um número inteiro positivo" });
+  }
+
+  let price;
+  let companyName;
+  let symbol;
+  let docId;
+  let newTransaction;
+  let caixaAntigo;
+  let purchasedQuantityOfSymbol = 0;
+  let;
 };
