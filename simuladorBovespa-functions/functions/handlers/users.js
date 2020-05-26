@@ -14,11 +14,17 @@ exports.signup = (req, res) => {
   let password = req.body.password;
   let confirmPassword = req.body.confirmPassword;
   let email = req.body.email;
+  let name = req.body.name;
+  let lastName = req.body.lastName;
+  
+  
 
   const newUser = {
     email,
     password,
     confirmPassword,
+    name: req.body.name,
+    lastName: req.body.lastName
   };
 
   const { valid, errors } = validateSignupData(newUser);
@@ -44,9 +50,9 @@ exports.signup = (req, res) => {
         createdAt: new Date().toISOString(),
         email: newUser.email,
         imageUrl: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${noImg}?alt=media`,
-        lastName: "",
+        lastName: newUser.lastName,
         location: "",
-        name: "",
+        name: newUser.name,
         website: "",
       };
       return db.doc(`/users/${userId}`).set(userCredentials);
