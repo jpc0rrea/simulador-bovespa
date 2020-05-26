@@ -304,3 +304,39 @@ exports.getTransaction = (req, res) => {
       return res.status(500).json({ error: err.code });
     });
 };
+
+exports.commentOnTransaction = (req, res) => {
+  if (req.body.body.trim() === "")
+    return res
+      .status(400)
+      .json({ body: "O corpo do comentário não pode estar vazio" });
+
+  const newComment = {
+    body: req.body.body,
+    createdAt: new Date().toISOString(),
+    transactionId: req.params.transactionId,
+    userName: req.user.name,
+    userImage: req.user.imageUrl,
+    userId: req.user.uid,
+  };
+
+  db.doc(`/transactions/${req.params.transactionId}`)
+    .get()
+    .then((doc) => {
+      if (!doc.exists) {
+        return res.status(404).json({ error: "Transação não encontrada" });
+      }
+
+      return doc.ref.update({ commentCount: doc.data().commentCount + 1 });
+    })
+    .then(() => {
+      return db.collection("comments").add(newComment);
+    })
+    .then(() => {
+      return res.json(newComment);
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
