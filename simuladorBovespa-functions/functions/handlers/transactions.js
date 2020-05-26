@@ -31,6 +31,7 @@ exports.getAllTransactions = (req, res) => {
 };
 
 exports.buySymbol = (req, res) => {
+  // função para comprar alguma ação para o usuário
   let quantity = req.body.quantity;
   if (parseInt(quantity) === NaN) {
     return res
@@ -70,14 +71,59 @@ exports.buySymbol = (req, res) => {
       };
     })
     .then(() => {
-      db.collection("transactions")
-        .add(newTransaction)
+      db.doc(`/users/${req.user.uid}`)
+        .get()
         .then((doc) => {
-          res.json({ message: `documento ${doc.id} criado` });
+          // conferindo se o usuário tem saldo para a transação
+          caixaAntigo = doc.data().caixa;
+          if (newTransaction.total > caixaAntigo) {
+            return res
+              .status(400)
+              .json({ caixa: "Saldo não é suficiente para a transação." });
+          } else {
+            // se ele tiver, criar o documento da transação
+            db.collection("transactions")
+              .add(newTransaction)
+              .then((doc) => {
+                docId = doc.id;
+                console.log({
+                  message: `Documento ${docId} criado com sucesso.`,
+                });
+              })
+              .then(() => {
+                // atualizar o valor em caixa do usuário
+                db.doc(`/users/${req.user.uid}`)
+                  .get()
+                  .then((doc) => {
+                    let caixa = round(caixaAntigo - newTransaction.total);
+                    db.doc(`/users/${req.user.uid}`)
+                      .update({ caixa })
+                      .then(() => {
+                        return res.json(newTransaction);
+                      })
+                      .catch((err) => {
+                        // catch do retorno newTransaction
+                        console.error(err);
+                        return res.status(500).json({ error: err.code });
+                      });
+                  })
+                  .catch((err) => {
+                    // catch da atualização do caixa do usuário
+                    console.error(err);
+                    return res.status(500).json({ error: err.code });
+                  });
+              })
+              .catch((err) => {
+                // catch do acesso ao usuário para alterar o caixa
+                console.error(err);
+                return res.status(500).json({ error: err.code });
+              });
+          }
         })
         .catch((err) => {
+          // catch do acesso ao user para checar se ele podia fazer a transação
           console.error(err);
-          res.status(500).json({ error: err });
+          return res.status(500).json({ error: err.code });
         });
     })
     .catch((err) => {
