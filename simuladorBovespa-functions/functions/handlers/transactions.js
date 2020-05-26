@@ -272,3 +272,35 @@ exports.sellSymbol = (req, res) => {
       return res.status(500).json({ error: err.code });
     });
 };
+
+exports.getTransaction = (req, res) => {
+  let transactionData = {};
+  db.doc(`/transactions/${req.params.transactionId}`)
+    .get()
+    .then((doc) => {
+      if (!doc.exists) {
+        return res.status(400).json({ error: "Transação não encontrada" });
+      }
+      transactionData = doc.data();
+      transactionData.transactionId = doc.id;
+      if (transactionData.userId !== req.user.uid) {
+        return res.status(403).json({ error: "Não autorizado" });
+      }
+      return db
+        .collection("comments")
+        .orderBy("createdAt", "desc")
+        .where("transactionId", "==", req.params.transactionId)
+        .get();
+    })
+    .then((data) => {
+      transactionData.comments = [];
+      data.forEach((doc) => {
+        transactionData.comments.push(doc.data());
+      });
+      return res.json(transactionData);
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
