@@ -7,13 +7,17 @@ const app = express();
 
 const { FBAuth } = require("./utils/fbAuth");
 
-const { getAllTransactions, buySymbol } = require("./handlers/transactions");
+const {
+  getAllTransactions,
+  buySymbol,
+  sellSymbol,
+} = require("./handlers/transactions");
 const { signup, login, uploadImage } = require("./handlers/users");
 
 // transactions routes
 app.get("/getAllTransactions", FBAuth, getAllTransactions);
 app.post("/buySymbol", FBAuth, buySymbol);
-// sell symbol
+app.post("/sellSymbol", FBAuth, sellSymbol);
 
 // users routes
 app.post("/signup", signup);
