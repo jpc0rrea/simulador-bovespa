@@ -13,10 +13,11 @@ const { signup, login, uploadImage } = require("./handlers/users");
 // transactions routes
 app.get("/getAllTransactions", FBAuth, getAllTransactions);
 app.post("/buySymbol", FBAuth, buySymbol);
+// sell symbol
 
 // users routes
 app.post("/signup", signup);
 app.post("/login", login);
-app.post("/user/image",FBAuth, uploadImage);
+app.post("/user/image", FBAuth, uploadImage);
 
 exports.api = functions.https.onRequest(app);
