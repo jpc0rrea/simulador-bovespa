@@ -31,6 +31,7 @@ exports.getAllTransactions = (req, res) => {
 };
 
 exports.buySymbol = (req, res) => {
+  // função para comprar alguma ação para o usuário
   let quantity = req.body.quantity;
   if (parseInt(quantity) === NaN) {
     return res
@@ -40,6 +41,11 @@ exports.buySymbol = (req, res) => {
     return res
       .status(400)
       .json({ quantity: "Deve ser um número inteiro positivo" });
+  }
+
+  // checando se o usuário deixou o campo symbol vazio
+  if (req.body.symbol.trim() === "") {
+    return res.status(400).json({ symbol: "Must not be empty" });
   }
 
   let price;
@@ -70,18 +76,199 @@ exports.buySymbol = (req, res) => {
       };
     })
     .then(() => {
-      db.collection("transactions")
-        .add(newTransaction)
+      db.doc(`/users/${req.user.uid}`)
+        .get()
         .then((doc) => {
-          res.json({ message: `documento ${doc.id} criado` });
+          // conferindo se o usuário tem saldo para a transação
+          caixaAntigo = doc.data().caixa;
+          if (newTransaction.total > caixaAntigo) {
+            return res
+              .status(400)
+              .json({ caixa: "Saldo não é suficiente para a transação." });
+          } else {
+            // se ele tiver, criar o documento da transação
+            db.collection("transactions")
+              .add(newTransaction)
+              .then((doc) => {
+                docId = doc.id;
+                console.log({
+                  message: `Documento ${docId} criado com sucesso.`,
+                });
+              })
+              .then(() => {
+                // atualizar o valor em caixa do usuário
+                db.doc(`/users/${req.user.uid}`)
+                  .get()
+                  .then((doc) => {
+                    let caixa = round(caixaAntigo - newTransaction.total);
+                    db.doc(`/users/${req.user.uid}`)
+                      .update({ caixa })
+                      .then(() => {
+                        return res.json(newTransaction);
+                      })
+                      .catch((err) => {
+                        // catch do retorno newTransaction
+                        console.error(err);
+                        return res.status(500).json({ error: err.code });
+                      });
+                  })
+                  .catch((err) => {
+                    // catch da atualização do caixa do usuário
+                    console.error(err);
+                    return res.status(500).json({ error: err.code });
+                  });
+              })
+              .catch((err) => {
+                // catch do acesso ao usuário para alterar o caixa
+                console.error(err);
+                return res.status(500).json({ error: err.code });
+              });
+          }
         })
         .catch((err) => {
+          // catch do acesso ao user para checar se ele podia fazer a transação
           console.error(err);
-          res.status(500).json({ error: err });
+          return res.status(500).json({ error: err.code });
         });
     })
     .catch((err) => {
       console.error(err);
       res.status(500).json({ error: err });
+    });
+};
+
+exports.sellSymbol = (req, res) => {
+  // garantir que eu tenho o symbol que estou tentando vender
+  // na quantidade certa e mudar o saldo do usuário
+
+  // checando se o usuário deixou o campo symbol vazio
+  if (req.body.symbol.trim() === "") {
+    return res.status(400).json({ symbol: "Must not be empty" });
+  }
+
+  // checando se a quantidade é um inteiro maior que zero
+  // função para comprar alguma ação para o usuário
+  let quantity = req.body.quantity;
+  if (parseInt(quantity) === NaN) {
+    return res
+      .status(400)
+      .json({ quantity: "Deve ser um número inteiro positivo" });
+  } else if (parseInt(quantity) < 0) {
+    return res
+      .status(400)
+      .json({ quantity: "Deve ser um número inteiro positivo" });
+  }
+
+  let price;
+  let companyName;
+  let symbol;
+  let docId;
+  let newTransaction;
+  let caixaAntigo;
+  let purchasedQuantityOfSymbol = 0;
+  let soldQuantityOfSymbol = 0;
+  let sharesInPortfolio = 0;
+
+  getPrice(req.body.symbol)
+    .then((companyData) => {
+      price = companyData.price;
+      companyName = companyData.name;
+      symbol = companyData.symbol;
+      total = parseInt(quantity) * price;
+    })
+    .then(() => {
+      newTransaction = {
+        userId: req.user.uid,
+        type: "Venda",
+        total,
+        symbol,
+        total,
+        quantity,
+        price,
+        companyName,
+        transactedAt: new Date().toISOString(),
+        commentCount: 0,
+      };
+    })
+    .then(() => {
+      // verificando todas as transações de compra desse ativo
+      return db
+        .collection("transactions")
+        .where("userId", "==", req.user.uid)
+        .where("symbol", "==", symbol)
+        .where("type", "==", "Compra")
+        .get();
+    })
+    .then((purchaseTransactions) => {
+      purchaseTransactions.forEach((transaction) => {
+        purchasedQuantityOfSymbol += transaction.data().quantity;
+      });
+    })
+    .then(() => {
+      // verificando todas as transações de venda desse ativo
+      return db
+        .collection("transactions")
+        .where("userId", "==", req.user.uid)
+        .where("symbol", "==", symbol)
+        .where("type", "==", "Venda")
+        .get();
+    })
+    .then((saleTransactions) => {
+      saleTransactions.forEach((transaction) => {
+        soldQuantityOfSymbol += transaction.data().quantity;
+      });
+    })
+    .then(() => {
+      // agora vou verificar se temos ativos suficientes para vender
+      sharesInPortfolio = purchasedQuantityOfSymbol - soldQuantityOfSymbol;
+      if (quantity > sharesInPortfolio) {
+        return res.status(400).json({
+          quantity: `Você está tentando vender ${quantity}, mas você só tem ${sharesInPortfolio} ações de ${symbol} no seu portifólio`,
+        });
+      } else {
+        // se ele puder vender, vou realizar a transação
+        db.collection("transactions")
+          .add(newTransaction)
+          .then((doc) => {
+            docId = doc.id;
+            console.log({ message: `Documento ${docId} criado com sucesso.` });
+          })
+          .then(() => {
+            // atualizar o valor em caixa do usuário
+            db.doc(`/users/${req.user.uid}`)
+              .get()
+              .then((doc) => {
+                caixaAntigo = doc.data().caixa;
+              })
+              .then(() => {
+                let caixa = round(caixaAntigo + total);
+                db.doc(`/users/${req.user.uid}`)
+                  .update({ caixa })
+                  .then(() => {
+                    return res.json(newTransaction);
+                  })
+                  .catch((err) => {
+                    // catch do update caixa do usuário
+                    console.error(err);
+                    return res.status(500).json({ error: err.code });
+                  });
+              })
+              .catch((err) => {
+                // catch do acesso ao usuário para atualizar seu caixa
+                console.error(err);
+                return res.status(500).json({ error: err.code });
+              });
+          })
+          .catch((err) => {
+            // catch do adicionar nova transação na coleção transactions
+            console.error(err);
+            return res.status(500).json({ error: err.code });
+          });
+      }
+    })
+    .catch((err) => {
+      // catch de pegar as informações de quantas ações eu tenho no portifólio
+      console.error(err);
+      return res.status(500).json({ error: err.code });
     });
 };
