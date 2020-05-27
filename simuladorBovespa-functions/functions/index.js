@@ -3,6 +3,8 @@ const functions = require("firebase-functions");
 const express = require("express");
 const app = express();
 
+const { db } = require("./utils/admin");
+
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 
 const { FBAuth } = require("./utils/fbAuth");
@@ -45,4 +47,28 @@ exports.api = functions.https.onRequest(app);
 exports.onUserImageChange = functions
   .region("us-east1")
   .firestore.document(`/users/{userId}`)
-  .onUpdate((change) => {});
+  .onUpdate((change) => {
+    console.log(change.before.data());
+    console.log(change.after.data());
+    if (change.before.data().imageUrl !== change.after.data().imageUrl) {
+      console.log("Imagem mudou");
+      let batch = db.batch();
+      return db
+        .collection("comments")
+        .where("userId", "==", change.before.id)
+        .get()
+        .then((data) => {
+          data.forEach((commentData) => {
+            const comment = db.doc(`/comments/${commentData.id}`);
+            batch.update(comment, { userImage: change.after.data().imageUrl });
+          });
+          return batch.commit();
+        })
+        .catch((err) => {
+          console.error(err);
+          return res.status(500).json({ error: err.code });
+        });
+    } else {
+      return true;
+    }
+  });
