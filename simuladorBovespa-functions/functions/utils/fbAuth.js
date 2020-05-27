@@ -19,11 +19,14 @@ const FBAuth = (req, res, next) => {
     .verifyIdToken(idToken) // estamos verificando o idToken
     .then((decodedToken) => {
       // e enviar para o nosso req informações sobre o usuário
+      console.log(decodedToken);
       req.user = decodedToken;
       return db.doc(`/users/${req.user.uid}`).get();
     })
     .then((data) => {
       req.user.email = data.data().email;
+      req.user.name = data.data().name;
+      req.user.imageUrl = data.data().imageUrl;
       return next(); // next() deixa a requisição continuar
     })
     .catch((err) => {

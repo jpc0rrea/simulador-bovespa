@@ -2,7 +2,6 @@ const https = require("https");
 
 const getPrice = (symbol) => {
   return new Promise((resolve, reject) => {
-    // symbol é o papel da empresa
     symbol = symbol.trim().toUpperCase();
     if (symbol.search(/\.SA/) === -1) {
       symbol += ".SA";
@@ -34,5 +33,17 @@ const getPrice = (symbol) => {
 const round = (number) => {
   return Math.round(number * 100) / 100;
 };
+
+const real = (number) => {
+  number = number.toLocaleString("pt-BR", {
+    currency: "BRL",
+    style: "currency",
+  });
+
+  number = number.replace(/\./g, "v");
+  number = number.replace(/\,/g, ".");
+  number = number.replace(/v/g, ",");
+  return number;
+};
 // getPrice("ITSA4").then((data) => console.log(data));
-module.exports = { getPrice, round };
+module.exports = { getPrice, round, real };

@@ -1,6 +1,6 @@
 const { db } = require("../utils/admin");
 
-const { getPrice, round } = require("../utils/yahooFinance");
+const { getPrice, round, real } = require("../utils/finance");
 
 exports.getAllTransactions = (req, res) => {
   db.collection("transactions")
@@ -45,7 +45,7 @@ exports.buySymbol = (req, res) => {
 
   // checando se o usuário deixou o campo symbol vazio
   if (req.body.symbol.trim() === "") {
-    return res.status(400).json({ symbol: "Must not be empty" });
+    return res.status(400).json({ symbol: "Não pode estar vazio" });
   }
 
   let price;
@@ -143,7 +143,7 @@ exports.sellSymbol = (req, res) => {
 
   // checando se o usuário deixou o campo symbol vazio
   if (req.body.symbol.trim() === "") {
-    return res.status(400).json({ symbol: "Must not be empty" });
+    return res.status(400).json({ symbol: "Não pode estar vazio" });
   }
 
   // checando se a quantidade é um inteiro maior que zero
@@ -268,6 +268,100 @@ exports.sellSymbol = (req, res) => {
     })
     .catch((err) => {
       // catch de pegar as informações de quantas ações eu tenho no portifólio
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
+
+exports.getTransaction = (req, res) => {
+  let transactionData = {};
+  db.doc(`/transactions/${req.params.transactionId}`)
+    .get()
+    .then((doc) => {
+      if (!doc.exists) {
+        return res.status(400).json({ error: "Transação não encontrada" });
+      }
+      transactionData = doc.data();
+      transactionData.transactionId = doc.id;
+      if (transactionData.userId !== req.user.uid) {
+        return res.status(403).json({ error: "Não autorizado" });
+      }
+      return db
+        .collection("comments")
+        .orderBy("createdAt", "desc")
+        .where("transactionId", "==", req.params.transactionId)
+        .get();
+    })
+    .then((data) => {
+      transactionData.comments = [];
+      data.forEach((doc) => {
+        transactionData.comments.push(doc.data());
+      });
+      return res.json(transactionData);
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
+
+exports.commentOnTransaction = (req, res) => {
+  if (req.body.body.trim() === "")
+    return res
+      .status(400)
+      .json({ body: "O corpo do comentário não pode estar vazio" });
+
+  const newComment = {
+    body: req.body.body,
+    createdAt: new Date().toISOString(),
+    transactionId: req.params.transactionId,
+    userName: req.user.name,
+    userImage: req.user.imageUrl,
+    userId: req.user.uid,
+  };
+
+  db.doc(`/transactions/${req.params.transactionId}`)
+    .get()
+    .then((doc) => {
+      if (!doc.exists) {
+        return res.status(404).json({ error: "Transação não encontrada" });
+      }
+
+      return doc.ref.update({ commentCount: doc.data().commentCount + 1 });
+    })
+    .then(() => {
+      return db.collection("comments").add(newComment);
+    })
+    .then(() => {
+      return res.json(newComment);
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
+
+exports.getSymbolQuote = (req, res) => {
+  let symbol = req.body.symbol.trim();
+  if (symbol === "") {
+    return res.status(400).json({ symbol: "Não pode estar vazio" });
+  }
+
+  let companyInformation = {};
+  getPrice(symbol)
+    .then((companyData) => {
+      companyInformation.price = companyData.price;
+      companyInformation.name = companyData.name;
+      companyInformation.symbol = companyData.symbol;
+    })
+    .then(() => {
+      return res.json({
+        message: `Uma ação de ${companyInformation.name} (${
+          companyInformation.symbol
+        }) está custando ${real(companyInformation.price)}`,
+      });
+    })
+    .catch((err) => {
       console.error(err);
       return res.status(500).json({ error: err.code });
     });

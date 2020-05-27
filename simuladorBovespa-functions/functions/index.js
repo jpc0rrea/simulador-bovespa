@@ -11,6 +11,9 @@ const {
   getAllTransactions,
   buySymbol,
   sellSymbol,
+  getTransaction,
+  commentOnTransaction,
+  getSymbolQuote,
 } = require("./handlers/transactions");
 const { signup, login, uploadImage } = require("./handlers/users");
 
@@ -18,6 +21,9 @@ const { signup, login, uploadImage } = require("./handlers/users");
 app.get("/getAllTransactions", FBAuth, getAllTransactions);
 app.post("/buySymbol", FBAuth, buySymbol);
 app.post("/sellSymbol", FBAuth, sellSymbol);
+app.get("/getTransaction/:transactionId", FBAuth, getTransaction);
+app.post("/transaction/:transactionId/comment", FBAuth, commentOnTransaction);
+app.post("/quote/", getSymbolQuote);
 
 // users routes
 app.post("/signup", signup);
