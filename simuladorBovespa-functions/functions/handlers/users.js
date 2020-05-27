@@ -8,6 +8,7 @@ firebase.initializeApp(config);
 const {
   validateSignupData,
   validateLoginData,
+  reduceUserDetails,
 } = require("../utils/validators");
 
 exports.signup = (req, res) => {
@@ -151,4 +152,18 @@ exports.uploadImage = (req, res) => {
       });
   });
   busboy.end(req.rawBody);
+};
+
+exports.addUserDetails = (req, res) => {
+  let userDetails = reduceUserDetails(req.body);
+
+  db.doc(`/users/${req.user.uid}`)
+    .update(userDetails)
+    .then(() => {
+      return res.json({ message: "Detalhes adicionados com sucesso" });
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
 };
