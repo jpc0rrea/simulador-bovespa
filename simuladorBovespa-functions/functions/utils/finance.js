@@ -45,5 +45,30 @@ const real = (number) => {
   number = number.replace(/v/g, ",");
   return number;
 };
-// getPrice("ITSA4").then((data) => console.log(data));
-module.exports = { getPrice, round, real };
+
+const getPriceSync = (portfolio) => {
+  return new Promise((resolve, reject) => {
+    var actions = Object.keys(portfolio).map(getPrice); // pegando o preço de todas as ações do portfolio
+
+    var results = Promise.all(actions); // actions agora é um array de promises
+
+    results
+      .then((data) => {
+        data.forEach((company) => {
+          portfolio[company.symbol].price = company.price;
+          portfolio[company.symbol].total = round(
+            portfolio[company.symbol].price * portfolio[company.symbol].quantity
+          );
+        });
+      })
+      .then(() => {
+        try {
+          resolve(portfolio);
+        } catch (e) {
+          reject(e);
+        }
+      });
+  });
+};
+
+module.exports = { getPrice, round, real, getPriceSync };
