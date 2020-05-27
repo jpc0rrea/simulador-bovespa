@@ -1,6 +1,6 @@
 const { db } = require("../utils/admin");
 
-const { getPrice, round, real } = require("../utils/finance");
+const { getPrice, round, real, getPriceSync } = require("../utils/finance");
 
 exports.getAllTransactions = (req, res) => {
   db.collection("transactions")
@@ -360,6 +360,49 @@ exports.getSymbolQuote = (req, res) => {
           companyInformation.symbol
         }) está custando ${real(companyInformation.price)}`,
       });
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
+
+exports.home = (req, res) => {
+  let companiesInPortfolio = {};
+  db.collection("transactions")
+    .where("userId", "==", req.user.uid)
+    .get()
+    .then((transactions) => {
+      transactions.forEach((transaction) => {
+        let symbol = transaction.data().symbol;
+        let name = transaction.data().name;
+        let quantity;
+        if (transaction.data().type === "Venda") {
+          quantity = -transaction.data().quantity;
+        } else {
+          quantity = transaction.data().quantity;
+        }
+        // conferindo se já temos essa empresa na portfólio
+        if (symbol in companiesInPortfolio) {
+          // se já tivermos, atualizar o valor da quantidade
+          companiesInPortfolio[symbol].quantity += quantity;
+        } else {
+          companiesInPortfolio[symbol] = {
+            name,
+            quantity,
+          };
+        }
+      });
+    })
+    .then(() => {
+      getPriceSync(companiesInPortfolio)
+        .then((data) => {
+          return res.json({ data });
+        })
+        .catch((err) => {
+          console.error(err);
+          return res.status(500).json({ error: err.code });
+        });
     })
     .catch((err) => {
       console.error(err);
