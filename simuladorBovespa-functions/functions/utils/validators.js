@@ -23,6 +23,14 @@ exports.validateSignupData = (data) => {
     errors.password = "Campo 'senha' não pode estar vazio";
   }
 
+  if (isEmpty(data.name)) {
+    errors.name = "Campo 'nome' não pode estar vazio";
+  }
+
+  if (isEmpty(data.lastName)) {
+    errors.lastName = "Campo 'lastNome' não pode estar vazio";
+  }
+
   if (data.password !== data.confirmPassword) {
     errors.confirmPassword = "Senhas devem ser iguais.";
   }
