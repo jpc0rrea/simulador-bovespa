@@ -14,6 +14,7 @@ const {
   getTransaction,
   commentOnTransaction,
   getSymbolQuote,
+  home,
 } = require("./handlers/transactions");
 const { signup, login, uploadImage } = require("./handlers/users");
 
@@ -24,6 +25,7 @@ app.post("/sellSymbol", FBAuth, sellSymbol);
 app.get("/getTransaction/:transactionId", FBAuth, getTransaction);
 app.post("/transaction/:transactionId/comment", FBAuth, commentOnTransaction);
 app.post("/quote/", getSymbolQuote);
+app.get("/", FBAuth, home);
 
 // users routes
 app.post("/signup", signup);

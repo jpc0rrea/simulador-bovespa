@@ -19,7 +19,6 @@ const FBAuth = (req, res, next) => {
     .verifyIdToken(idToken) // estamos verificando o idToken
     .then((decodedToken) => {
       // e enviar para o nosso req informações sobre o usuário
-      console.log(decodedToken);
       req.user = decodedToken;
       return db.doc(`/users/${req.user.uid}`).get();
     })
