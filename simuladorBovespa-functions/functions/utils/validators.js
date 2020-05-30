@@ -23,6 +23,14 @@ exports.validateSignupData = (data) => {
     errors.password = "Campo 'senha' não pode estar vazio";
   }
 
+  if (isEmpty(data.name)) {
+    errors.name = "Campo 'nome' não pode estar vazio";
+  }
+
+  if (isEmpty(data.lastName)) {
+    errors.lastName = "Campo 'lastNome' não pode estar vazio";
+  }
+
   if (data.password !== data.confirmPassword) {
     errors.confirmPassword = "Senhas devem ser iguais.";
   }
@@ -47,4 +55,20 @@ exports.validateLoginData = (data) => {
     errors,
     valid: Object.keys(errors).length === 0 ? true : false,
   };
+};
+
+exports.reduceUserDetails = (data) => {
+  let userDetails = {};
+
+  if (!isEmpty(data.bio.trim())) userDetails.bio = data.bio;
+  if (!isEmpty(data.website.trim())) {
+    if (data.website.trim().substring(0, 4) !== "http") {
+      userDetails.website = `http://${data.website.trim()}`;
+    } else {
+      userDetails.website = data.website;
+    }
+  }
+  if (!isEmpty(data.location.trim())) userDetails.location = data.location;
+
+  return userDetails;
 };

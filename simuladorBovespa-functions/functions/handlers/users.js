@@ -8,23 +8,22 @@ firebase.initializeApp(config);
 const {
   validateSignupData,
   validateLoginData,
+  reduceUserDetails,
 } = require("../utils/validators");
 
 exports.signup = (req, res) => {
-  let password = req.body.password;
-  let confirmPassword = req.body.confirmPassword;
-  let email = req.body.email;
-  let name = req.body.name;
-  let lastName = req.body.lastName;
-  
-  
+  let password = req.body.password.trim();
+  let confirmPassword = req.body.confirmPassword.trim();
+  let email = req.body.email.trim();
+  let name = req.body.name.trim();
+  let lastName = req.body.lastName.trim();
 
   const newUser = {
     email,
     password,
     confirmPassword,
-    name: req.body.name,
-    lastName: req.body.lastName
+    name,
+    lastName,
   };
 
   const { valid, errors } = validateSignupData(newUser);
@@ -153,4 +152,44 @@ exports.uploadImage = (req, res) => {
       });
   });
   busboy.end(req.rawBody);
+};
+
+exports.addUserDetails = (req, res) => {
+  let userDetails = reduceUserDetails(req.body);
+
+  db.doc(`/users/${req.user.uid}`)
+    .update(userDetails)
+    .then(() => {
+      return res.json({ message: "Detalhes adicionados com sucesso" });
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
+
+exports.getAuthenticatedUser = (req, res) => {
+  let userData = {};
+  db.doc(`/users/${req.user.uid}`)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        userData.credentials = doc.data();
+        return db
+          .collection("transactions")
+          .where("userId", "==", req.user.uid)
+          .get();
+      }
+    })
+    .then((data) => {
+      userData.transactions = [];
+      data.forEach((doc) => {
+        userData.transactions.push(doc.data());
+      });
+      return res.json(userData);
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
 };

@@ -16,7 +16,13 @@ const {
   getSymbolQuote,
   home,
 } = require("./handlers/transactions");
-const { signup, login, uploadImage } = require("./handlers/users");
+const {
+  signup,
+  login,
+  uploadImage,
+  addUserDetails,
+  getAuthenticatedUser,
+} = require("./handlers/users");
 
 // transactions routes
 app.get("/getAllTransactions", FBAuth, getAllTransactions);
@@ -31,5 +37,12 @@ app.get("/", FBAuth, home);
 app.post("/signup", signup);
 app.post("/login", login);
 app.post("/user/image", FBAuth, uploadImage);
+app.post("/user", FBAuth, addUserDetails);
+app.get("/user", FBAuth, getAuthenticatedUser);
 
 exports.api = functions.https.onRequest(app);
+
+exports.onUserImageChange = functions
+  .region("us-east1")
+  .firestore.document(`/users/{userId}`)
+  .onUpdate((change) => {});
