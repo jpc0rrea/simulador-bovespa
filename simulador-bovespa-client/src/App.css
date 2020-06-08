@@ -4,3 +4,54 @@ body {
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
 }
+
+.loginForm {
+  background-color: rgb(52, 58, 54);
+  border-radius: 8px;
+  margin: auto;
+  margin-top: 48px;
+  padding: 48px;
+  padding-top: 16px;
+  width: 50%;
+  align-self: center;
+  color: white;
+}
+
+.formTitle {
+  margin-bottom: 20px;
+}
+
+/* .loginWithGoogleAndFacebook {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.socialForms {
+  margin-top: 18px;
+  display: flex;
+  width: 70%;
+  justify-content: space-between;
+}
+
+.socialForm {
+  display: flex;
+  width: 30%;
+  justify-content: space-evenly;
+  align-items: center;
+  box-sizing: content-box;
+
+  background-color: white;
+  border-radius: 4px;
+
+  border: none;
+}
+
+.Google {
+  background-image: url("./static/btn_google_signin_light_normal_web.png");
+}
+
+.socialForm p {
+  margin-bottom: 0;
+  font-weight: 400;
+} */
