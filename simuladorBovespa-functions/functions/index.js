@@ -50,10 +50,7 @@ exports.onUserImageChange = functions
   .region("us-east1")
   .firestore.document(`/users/{userId}`)
   .onUpdate((change) => {
-    console.log(change.before.data());
-    console.log(change.after.data());
     if (change.before.data().imageUrl !== change.after.data().imageUrl) {
-      console.log("Imagem mudou");
       let batch = db.batch();
       return db
         .collection("comments")
