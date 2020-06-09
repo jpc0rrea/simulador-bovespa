@@ -25,6 +25,10 @@ body {
   max-width: 1200px;
 }
 
+.logout {
+    margin-right: 6px
+}
+
 /* .loginWithGoogleAndFacebook {
   display: flex;
   flex-direction: column;

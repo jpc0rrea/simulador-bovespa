@@ -1,5 +1,6 @@
 import React from "react";
 import { Navbar, Nav } from "react-bootstrap";
+import { LogOut } from "react-feather";
 
 
 const HeaderWithCredentials = () => {
@@ -13,6 +14,12 @@ const HeaderWithCredentials = () => {
             <Nav.Link href="/sell">Vender</Nav.Link>
             <Nav.Link href="/history">Histórico</Nav.Link>
         </Nav>
+        <Navbar className="mr-sm-2">
+            <Nav.Link href="/login">
+                <LogOut className="logout"/>
+                Sair
+            </Nav.Link>
+        </Navbar>
       </Navbar>
     </>
   );
