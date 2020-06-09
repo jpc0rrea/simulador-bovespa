@@ -2,7 +2,9 @@ import React from "react";
 import HeaderWithCredentials from "../../components/HeaderWithCredentials";
 import { Form, Button } from "react-bootstrap";
 
-const Sell = () => {
+import api from "../../services/api";
+
+const Quote = () => {
   function handleInputChange(event) {
     console.log(event.target);
   }
@@ -17,7 +19,7 @@ const Sell = () => {
     <>
       <HeaderWithCredentials />
       <div className="loginForm">
-        <h1 className="formTitle">Escolha qual ativo você quer vender</h1>
+        <h1 className="formTitle">Escolha qual ativo você quer cotar</h1>
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="formInputSymbol">
             <Form.Label>Ativo</Form.Label>
@@ -29,18 +31,8 @@ const Sell = () => {
             />
           </Form.Group>
 
-          <Form.Group controlId="formInputSymbolQuantity">
-            <Form.Label>Quantidade de cotas</Form.Label>
-            <Form.Control
-              type="number"
-              min="0"
-              name="quantity"
-              placeholder="Digite quantas cotas quer vender"
-              onChange={handleInputChange}
-            />
-          </Form.Group>
           <Button variant="outline-info" type="submit">
-            Comprar
+            Cotar
           </Button>
         </Form>
       </div>
@@ -48,4 +40,4 @@ const Sell = () => {
   );
 };
 
-export default Sell;
+export default Quote;

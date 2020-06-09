@@ -10,6 +10,7 @@ const HeaderWithCredentials = () => {
         <Navbar.Brand href="/">Simulador Bovespa</Navbar.Brand>
         <Nav className="mr-auto">
             <Nav.Link href="/">Início</Nav.Link>
+            <Nav.Link href="/quote">Cotar ativo</Nav.Link>
             <Nav.Link href="/buy">Comprar</Nav.Link>
             <Nav.Link href="/sell">Vender</Nav.Link>
             <Nav.Link href="/history">Histórico</Nav.Link>

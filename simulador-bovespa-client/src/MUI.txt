@@ -22,3 +22,20 @@
 // });
 
 // library.add(fab);
+
+            <Autocomplete
+              id="list-of-symbols"
+              options={companies}
+              getOptionLabel={(companies) => `${companies.name} - ${companies.code}`}
+              style={{
+                background: "white",
+                borderRadius: "8px",
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Digite aqui o ativo"
+                  variant=""
+                />
+              )}
+            />
