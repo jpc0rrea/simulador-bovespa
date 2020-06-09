@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import HeaderWithoutCredentials from "../components/HeaderWithoutCredentials";
+import HeaderWithoutCredentials from "../../components/HeaderWithoutCredentials";
 import { Form, Button } from "react-bootstrap";
 
-import api from "../services/api";
+import api from "../../services/api";
 
 const Login = () => {
   const [formData, setFormData] = useState({

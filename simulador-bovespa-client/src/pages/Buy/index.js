@@ -1,6 +1,5 @@
 import React from "react";
-import HeaderWithCredentials from "../components/HeaderWithCredentials";
-
+import HeaderWithCredentials from "../../components/HeaderWithCredentials";
 const Buy = () => {
   return (
     <>
