@@ -1,5 +1,6 @@
 tasks:
-  - init: cd simuladorBovespa-functions && cd functions && npm install 
+  - init: cd simuladorBovespa-functions && cd functions && npm install
+  - init: cd simulador-bovespa-client && npm install
   - before: npm i -g firebase-tools && export GOOGLE_APPLICATION_CREDENTIALS="/workspace/simulador-bovespa/simuladorBovespa-functions/Simulador Bovespa-aa447164afcc.json" && firebase login --no-localhost 
 image:
   file: .gitpod.Dockerfile
