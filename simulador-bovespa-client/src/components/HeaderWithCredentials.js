@@ -1,30 +1,19 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Navbar, Nav } from "react-bootstrap";
 
-// Material UI stuff
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Button from "@material-ui/core/Button";
 
 const HeaderWithCredentials = () => {
   return (
     <>
-      <AppBar>
-        <Toolbar>
-          <Button color="inherit" component={Link} to="/">
-            Início
-          </Button>
-          <Button color="inherit" component={Link} to="/buy">
-            Compra
-          </Button>
-          <Button color="inherit" component={Link} to="/sell">
-            Venda
-          </Button>
-          <Button color="inherit" component={Link} to="/history">
-            Histórico
-          </Button>
-        </Toolbar>
-      </AppBar>
+      <Navbar bg="dark" variant="dark">
+        <Navbar.Brand href="/">Simulador Bovespa</Navbar.Brand>
+        <Nav className="mr-auto">
+            <Nav.Link href="/">Início</Nav.Link>
+            <Nav.Link href="/buy">Comprar</Nav.Link>
+            <Nav.Link href="/sell">Vender</Nav.Link>
+            <Nav.Link href="/history">Histórico</Nav.Link>
+        </Nav>
+      </Navbar>
     </>
   );
 };

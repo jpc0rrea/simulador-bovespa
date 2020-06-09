@@ -5,9 +5,7 @@ const History = () => {
   return (
     <>
       <HeaderWithCredentials />
-      <div className="container">
-        <h1>History page</h1>
-      </div>
+      <h1>History page</h1>
     </>
   );
 };

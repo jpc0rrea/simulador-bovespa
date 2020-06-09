@@ -5,9 +5,7 @@ const Sell = () => {
   return (
     <>
       <HeaderWithCredentials />
-      <div className="container">
-        <h1>Sell page</h1>
-      </div>
+      <h1>Sell page</h1>
     </>
   );
 };
