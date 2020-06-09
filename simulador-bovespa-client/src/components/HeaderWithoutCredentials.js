@@ -8,6 +8,7 @@ const HeaderWithoutCredentials = () => {
       <Nav className="mr-auto">
         <Nav.Link href="/login">Login</Nav.Link>
         <Nav.Link href="/signup">Registre-se</Nav.Link>
+        <Nav.Link href="/quote">Cotar ativos</Nav.Link>
       </Nav>
     </Navbar>
   );
