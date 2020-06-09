@@ -71,4 +71,35 @@ const getPriceSync = (portfolio) => {
   });
 };
 
-module.exports = { getPrice, round, real, getPriceSync };
+const getCompaniesBovespa = () => {
+  return new Promise((resolve, reject) => {
+    const url =
+      "https://eodhistoricaldata.com/api/exchange-symbol-list/SA?api_token=5edf89381feb36.85891176&fmt=json";
+    https.get(url, (res) => {
+      let data = "";
+      let dataOfBovespa;
+      let bovespaCompanies = [];
+      res.on("data", (dados) => {
+        data += dados;
+      });
+
+      res.on("end", () => {
+        try {
+            dataOfBovespa = JSON.parse(data);
+            dataOfBovespa.forEach((company) => {
+              bovespaCompanies.push({
+                code: company.Code,
+                name: company.Name,
+                brazilian: company.Code.endsWith("34") ? false : true,
+              });
+            });
+            resolve(bovespaCompanies)
+        } catch(e) {
+            reject(e)
+        } 
+      });
+    });
+  });
+};
+
+module.exports = { getPrice, round, real, getPriceSync, getCompaniesBovespa };
