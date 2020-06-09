@@ -10,8 +10,7 @@ body {
   border-radius: 8px;
   margin: auto;
   margin-top: 48px;
-  padding: 48px;
-  padding-top: 16px;
+  padding: 16px 48px;
   width: 50%;
   align-self: center;
   color: white;
@@ -19,6 +18,11 @@ body {
 
 .formTitle {
   margin-bottom: 20px;
+}
+
+.container {
+  margin: 80px auto 0 auto;
+  max-width: 1200px;
 }
 
 /* .loginWithGoogleAndFacebook {

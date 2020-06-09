@@ -1,15 +1,15 @@
 import React from "react";
 import HeaderWithCredentials from "../components/HeaderWithCredentials";
 
-const Home = () => {
+const History = () => {
   return (
     <>
       <HeaderWithCredentials />
       <div className="container">
-        <h1>Home page</h1>
+        <h1>History page</h1>
       </div>
     </>
   );
 };
 
-export default Home;
+export default History;

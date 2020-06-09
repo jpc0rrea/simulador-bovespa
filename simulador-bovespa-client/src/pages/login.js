@@ -1,32 +1,69 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import HeaderWithoutCredentials from "../components/HeaderWithoutCredentials";
 import { Form, Button } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export class login extends Component {
-  render() {
-    return (
-      <>
-        <HeaderWithoutCredentials />
-        <div className="loginForm">
-          <h1 className="formTitle">
-            Faça login no <strong>Simulador Bovespa</strong>
-          </h1>
-          <Form>
-            <Form.Group controlId="formBasicEmail">
-              <Form.Label>E-mail</Form.Label>
-              <Form.Control type="email" placeholder="Digite o seu e-mail" />
-            </Form.Group>
+import api from "../services/api";
 
-            <Form.Group controlId="formBasicPassword">
-              <Form.Label>Senha</Form.Label>
-              <Form.Control type="password" placeholder="Senha"></Form.Control>
-            </Form.Group>
+const Login = () => {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
-            <Button variant="outline-info" type="submit">
-              Entrar
-            </Button>
-            {/* <div className="loginWithGoogleAndFacebook">
+  function handleInputChange(event) {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    console.log("Enviei!", formData);
+
+    await api
+      .post("login", formData)
+      .then((response) => {
+        console.log("Usuário logado com sucesso! Token: ", response.data);
+        alert(
+          `Usuário logado com sucesso. O login dele é: ${response.data.token}`
+        );
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
+  return (
+    <>
+      <HeaderWithoutCredentials />
+      <div className="loginForm">
+        <h1 className="formTitle">
+          Faça login no <strong>Simulador Bovespa</strong>
+        </h1>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group controlId="formBasicEmail">
+            <Form.Label>E-mail</Form.Label>
+            <Form.Control
+              type="email"
+              name="email"
+              placeholder="Digite o seu e-mail"
+              onChange={handleInputChange}
+            />
+          </Form.Group>
+
+          <Form.Group controlId="formBasicPassword">
+            <Form.Label>Senha</Form.Label>
+            <Form.Control
+              type="password"
+              name="password"
+              placeholder="Senha"
+              onChange={handleInputChange}
+            ></Form.Control>
+          </Form.Group>
+
+          <Button variant="outline-info" type="submit">
+            Entrar
+          </Button>
+          {/* <div className="loginWithGoogleAndFacebook">
               <Form.Text className="text-muted">Ou faça login com:</Form.Text>
               <div className="socialForms">
                 <button className="socialForm Google"></button>
@@ -37,11 +74,10 @@ export class login extends Component {
                 </button>
               </div>
             </div> */}
-          </Form>
-        </div>
-      </>
-    );
-  }
-}
+        </Form>
+      </div>
+    </>
+  );
+};
 
-export default login;
+export default Login;

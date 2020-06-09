@@ -1,15 +1,15 @@
 import React from "react";
 import HeaderWithCredentials from "../components/HeaderWithCredentials";
 
-const Home = () => {
+const Sell = () => {
   return (
     <>
       <HeaderWithCredentials />
       <div className="container">
-        <h1>Home page</h1>
+        <h1>Sell page</h1>
       </div>
     </>
   );
 };
 
-export default Home;
+export default Sell;
