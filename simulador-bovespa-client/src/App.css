@@ -29,6 +29,28 @@ body {
     margin-right: 6px
 }
 
+.autocomplete-suggestions {
+    border-top: 2px solid #999999;
+    background-color: #ffffff;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    overflow: hidden;
+}
+
+.autocomplete-suggestions > div {
+    height: calc(1.5em + .75rem + 2px);
+    padding: 6px;
+    border-top: 1px solid #666666;
+    color: #495057;
+    transition: 0.2s
+}
+
+.autocomplete-suggestions > div:hover {
+    cursor: pointer;
+    background-color: #17a2b8;
+    color: white
+}
+
 /* .loginWithGoogleAndFacebook {
   display: flex;
   flex-direction: column;

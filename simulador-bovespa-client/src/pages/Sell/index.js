@@ -1,8 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import HeaderWithCredentials from "../../components/HeaderWithCredentials";
 import { Form, Button } from "react-bootstrap";
+import Autocomplete from "../../components/Autocomplete";
+
+import api from "../../services/api";
 
 const Sell = () => {
+  const [companies, setCompanies] = useState([]);
+
+  useEffect(() => {
+    api.get("companies").then((bovespaCompanies) => {
+      setCompanies(bovespaCompanies.data);
+    });
+  }, []);
+
   function handleInputChange(event) {
     console.log(event.target);
   }
@@ -28,6 +39,13 @@ const Sell = () => {
               onChange={handleInputChange}
             />
           </Form.Group>
+          {companies.length > 0 && (
+            <Autocomplete
+              label="Ativo Autocomplete"
+              placeholder="Digite quantos ativos você quer."
+              options={companies}
+            />
+          )}
 
           <Form.Group controlId="formInputSymbolQuantity">
             <Form.Label>Quantidade de cotas</Form.Label>
