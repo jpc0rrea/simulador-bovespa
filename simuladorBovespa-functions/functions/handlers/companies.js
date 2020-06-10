@@ -11,8 +11,9 @@ exports.getAllCompanies = async (req, res) => {
       data.forEach((company) => {
         if (company.data().brazilian) {
           companies.push({
-            code: company.id,
+            symbol: company.id,
             name: company.data().name,
+            fullName: `${company.id} - ${company.data().name}`
           });
         }
       });
