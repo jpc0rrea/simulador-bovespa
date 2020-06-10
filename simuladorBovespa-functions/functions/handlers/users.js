@@ -1,6 +1,6 @@
 const { db, admin } = require("../utils/admin");
 
-const { config } = require("../utils/config");
+const { config } = require("../utils/firebaseConfig"); // create a config object from your project in the firebase console
 
 const firebase = require("firebase");
 firebase.initializeApp(config);
