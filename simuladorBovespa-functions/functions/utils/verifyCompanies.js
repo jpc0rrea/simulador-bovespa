@@ -23,8 +23,9 @@ const verifyCompanies = () => {
                   db.collection("companies")
                     .doc(company.code)
                     .set({
-                      name: company.name,
-                      brazilian: company.brazilian,
+                      // caso já tenha a empresa, eu escrevo por cima
+                      name: company.name, // caso não tenha, eu crio,
+                      brazilian: company.brazilian, // por isso usei o set
                     })
                     .then(() => true)
                     .catch((err) => {
