@@ -30,22 +30,11 @@ const Sell = () => {
       <div className="loginForm">
         <h1 className="formTitle">Escolha qual ativo você quer vender</h1>
         <Form onSubmit={handleSubmit}>
-          <Form.Group controlId="formInputSymbol">
-            <Form.Label>Ativo</Form.Label>
-            <Form.Control
-              type="text"
-              name="symbol"
-              placeholder="Digite o ativo aqui"
-              onChange={handleInputChange}
-            />
-          </Form.Group>
-          {companies.length > 0 && (
-            <Autocomplete
-              label="Ativo Autocomplete"
-              placeholder="Digite quantos ativos você quer."
-              options={companies}
-            />
-          )}
+          <Autocomplete
+            label="Ativo"
+            placeholder="Digite qual ativo você quer."
+            options={companies}
+          />
 
           <Form.Group controlId="formInputSymbolQuantity">
             <Form.Label>Quantidade de cotas</Form.Label>
