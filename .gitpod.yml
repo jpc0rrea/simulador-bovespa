@@ -3,7 +3,7 @@ tasks:
   - init: cd simulador-bovespa-client && npm install && npm run start
   - before: npm i -g firebase-tools && export GOOGLE_APPLICATION_CREDENTIALS="/workspace/simulador-bovespa/simulador-bovespa-functions/firebaseToken.json" && firebase login --no-localhost 
   # In the GOOGLE_APPLICATION_CREDENTIALS input the path for the KeyToken of your application
-  # And then run the: export GOOGLE_APPLICATION_CREDENTIALS="/workspace/simulador-bovespa/simulador-bovespa-functions/firebaseToken.json" && firebase serve
+  # And then run the: export GOOGLE_APPLICATION_CREDENTIALS="/workspace/simulador-bovespa/simulador-bovespa-functions/firebaseToken.json" && firebase serve --project <alias_or_project_id>
 image:
   file: .gitpod.Dockerfile
 
