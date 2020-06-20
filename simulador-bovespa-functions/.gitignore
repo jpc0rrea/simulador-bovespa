@@ -14,6 +14,7 @@ firebaseToken.json
 firebaseConfig.js
 firebase-debug.log
 SDKFirebase.txt
+.firebaserc
 
 
 # Uncomment this if you'd like others to create their own Firebase project.
