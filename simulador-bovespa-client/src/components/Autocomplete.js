@@ -132,6 +132,13 @@ function Autocomplete(props) {
       );
       setSearch(actualSelectedOption.innerHTML);
       setDisplay(false);
+    } else if (event.keyCode === 9) {
+      // usuário apertou tab, ir para o próximo input.
+      const actualSelectedOption = document.getElementById(
+        `option#${selectedOptionIndex.actual}`
+      );
+      setSearch(actualSelectedOption.innerHTML);
+      setDisplay(false);
     }
   }
 
