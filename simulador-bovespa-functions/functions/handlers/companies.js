@@ -1,22 +1,35 @@
 const { db } = require("../utils/admin");
 
-const { verifyCompanies } = require("../utils/verifyCompanies");
+const {
+  verifyCompanies,
+  verifyCompaniesAndBDRs,
+} = require("../utils/verifyCompanies");
 
 exports.getAllCompanies = async (req, res) => {
-  await verifyCompanies();
-  db.collection("companies")
+  // await verifyCompanies();
+  await verifyCompaniesAndBDRs();
+  db.doc("/companiesAndBDRs/companies")
     .get()
-    .then((data) => {
+    .then((companiesSnapshot) => {
       let companies = [];
-      data.forEach((company) => {
-        if (company.data().brazilian) {
-          companies.push({
-            symbol: company.id,
-            name: company.data().name,
-            fullName: `${company.id} - ${company.data().name}`
-          });
-        }
-      });
+      const allCompanies = companiesSnapshot.data();
+      // Ordering the dict
+      Object.keys(allCompanies)
+        .sort()
+        .forEach((companyCode, index) => {
+          console.log(companyCode, index);
+          if (companyCode === allCompanies[companyCode]) {
+            console.log(
+              `A empresa ${companyCode} está com problema, logo não foi adicionada a lista.`
+            );
+          } else {
+            companies.push({
+              symbol: companyCode,
+              name: allCompanies[companyCode],
+              fullName: `${companyCode} - ${allCompanies[companyCode]}`,
+            });
+          }
+        });
       return res.json(companies);
     })
     .catch((err) => {
