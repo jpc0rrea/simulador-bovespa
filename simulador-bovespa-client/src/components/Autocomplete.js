@@ -137,8 +137,12 @@ function Autocomplete(props) {
       const actualSelectedOption = document.getElementById(
         `option#${selectedOptionIndex.actual}`
       );
-      setSearch(actualSelectedOption.innerHTML);
-      setDisplay(false);
+      if (actualSelectedOption === null) {
+        setDisplay(false);
+      } else {
+        setSearch(actualSelectedOption.innerHTML);
+        setDisplay(false);
+      }
     }
   }
 
