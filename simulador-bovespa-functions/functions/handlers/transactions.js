@@ -360,6 +360,9 @@ exports.getSymbolQuote = (req, res) => {
         message: `Uma ação de ${companyInformation.name} (${
           companyInformation.symbol
         }) está custando ${real(companyInformation.price)}`,
+        price: companyInformation.price,
+        name: companyInformation.name,
+        symbol: companyInformation.symbol,
       });
     })
     .catch((err) => {

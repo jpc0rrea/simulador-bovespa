@@ -4,6 +4,7 @@ import { Form } from "react-bootstrap";
 function Autocomplete(props) {
   const [label] = useState(props.label);
   const [placeholder] = useState(props.placeholder);
+  const [inputedId] = useState(props.controlId);
   const [options, setOptions] = useState(props.options);
   const [display, setDisplay] = useState(false);
   const [search, setSearch] = useState("");
@@ -23,7 +24,6 @@ function Autocomplete(props) {
       "div.autocomplete-suggestions > div"
     );
     setOptionsQuantity(allOptions.length);
-    console.log("Entrou no useEffect");
     if (selectedOptionIndex.actual !== -1) {
       const optionSelected = document.getElementById(
         `option#${selectedOptionIndex.actual}`
@@ -62,24 +62,20 @@ function Autocomplete(props) {
     } else if (keyCode === 38 && selectedOptionIndex.actual <= 0) {
       // quando ele está no primeiro item da lista e aperta para cima
       // vou jogar ele para o último item da lista
-      console.log("Estou no primeiro item da lista!");
       setSelectedOptionIndex({
         actual: optionsQuantity - 1,
         past: selectedOptionIndex.actual,
       });
     } else if (keyCode === 38) {
-      console.log("up!");
       setSelectedOptionIndex({
         actual: selectedOptionIndex.actual - 1,
         past: selectedOptionIndex.actual,
       });
     } else if (keyCode === 40) {
-      console.log("down!");
       setSelectedOptionIndex({
         actual: selectedOptionIndex.actual + 1,
         past: selectedOptionIndex.actual,
       });
-      console.log("Sai do changeSelectedOptionIndex");
     }
   }
 
@@ -87,7 +83,6 @@ function Autocomplete(props) {
     event.preventDefault();
     setDisplay(true);
     setSearch(event.target.value);
-    console.log("Vou mudar para -1");
     // Se alguém digitar, vou tirar a marcação de onde o usuário estava na autocompletação
     setSelectedOptionIndex({
       actual: -1,
@@ -99,6 +94,8 @@ function Autocomplete(props) {
     allOptions.forEach((element) => {
       element.classList.remove("selected");
     });
+
+    console.log(event.target)
   }
 
   function handleClick(event) {
@@ -120,11 +117,7 @@ function Autocomplete(props) {
   function handleKeyDown(event) {
     if (event.keyCode === 38 || event.keyCode === 40) {
       // seta pra cima ou pra baixo
-      console.log(event.keyCode);
       changeSelectedOptionIndex(event.keyCode);
-      console.log(
-        `Actual: ${selectedOptionIndex.actual}, last: ${selectedOptionIndex.past}`
-      );
     } else if (event.keyCode === 13) {
       // usuário apertou enter
       const actualSelectedOption = document.getElementById(
@@ -151,7 +144,7 @@ function Autocomplete(props) {
       <Form.Group
         className="form-group-autocomplete"
         ref={wrapperRef}
-        controlId="autocompleteInput"
+        controlId={`${inputedId}`}
       >
         <Form.Label>{label}</Form.Label>
         <Form.Control

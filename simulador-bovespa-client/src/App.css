@@ -39,6 +39,7 @@ body {
   border-bottom-right-radius: 6px;
   overflow: hidden;
   position: absolute;
+  width: 100%
 }
 
 .autocomplete-suggestions > div {
