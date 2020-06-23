@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import HeaderWithCredentials from "../../components/HeaderWithCredentials";
 import { Form, Button } from "react-bootstrap";
+import Autocomplete from "../../components/Autocomplete";
 
 import api from "../../services/api";
 
@@ -22,10 +23,10 @@ const Buy = () => {
   function handleInputChange(event) {
     var { name, value } = event.target;
     if (name === "quantity") {
-        value = parseInt(value)
+      value = parseInt(value);
     }
     setFormData({ ...formData, [name]: value });
-    console.log(formData)
+    console.log(formData);
   }
 
   function handleSubmit(event) {
@@ -39,7 +40,12 @@ const Buy = () => {
       <div className="loginForm">
         <h1 className="formTitle">Escolha qual ativo você quer comprar</h1>
         <Form onSubmit={handleSubmit}>
-          <Form.Group controlId="formInputSymbol">
+          <Autocomplete
+            label="Ativo"
+            placeholder="Digite o ativo aqui"
+            options={companies}
+          />
+          {/* <Form.Group controlId="formInputSymbol">
             <Form.Label>Ativo</Form.Label>
             <Form.Control
               type="text"
@@ -47,7 +53,7 @@ const Buy = () => {
               placeholder="Digite o ativo aqui"
               onChange={handleInputChange}
             />
-          </Form.Group>
+          </Form.Group> */}
 
           <Form.Group controlId="formInputSymbolQuantity">
             <Form.Label>Quantidade de cotas</Form.Label>
