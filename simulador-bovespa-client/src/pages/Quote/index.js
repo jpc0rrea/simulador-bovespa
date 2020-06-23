@@ -63,7 +63,7 @@ const Quote = () => {
         <div className="quoteResponse">
           {showPrice && (
             <p>
-              Uma cota de <strong>{name}</strong> está custando {' '}
+              Uma cota de <strong>{name}</strong> ({symbol}) está custando {' '}
               <strong>{real(price)}</strong>
             </p>
           )}
