@@ -10,6 +10,4 @@ const real = (number) => {
   return number;
 };
 
-console.log(real(15000000))
-
 export default real
