@@ -28,10 +28,13 @@ exports.validateSignupData = (data) => {
   }
 
   if (isEmpty(data.lastName)) {
-    errors.lastName = "Campo 'lastNome' não pode estar vazio";
+    errors.lastName = "Campo 'sobrenome' não pode estar vazio";
   }
 
-  if (data.password !== data.confirmPassword) {
+  if (isEmpty(data.confirmPassword)) {
+    errors.confirmPassword =
+      "Campo 'confirmação da senha' não pode estar vazio";
+  } else if (data.password !== data.confirmPassword) {
     errors.confirmPassword = "Senhas devem ser iguais.";
   }
 
@@ -44,12 +47,13 @@ exports.validateSignupData = (data) => {
 exports.validateLoginData = (data) => {
   let errors = {};
 
-  if (isEmpty(data.email)) errors.email = "Campo 'e-mail' não pode estar vazio";
-  if (isEmpty(data.password))
-    errors.password = "Campo 'senha' não pode estar vazio";
-  if (!isEmail(data.email)) {
+  if (isEmpty(data.email)) {
+    errors.email = "Campo 'e-mail' não pode estar vazio";
+  } else if (!isEmail(data.email)) {
     errors.email = "E-mail inválido";
   }
+  if (isEmpty(data.password))
+    errors.password = "Campo 'senha' não pode estar vazio";
 
   return {
     errors,
