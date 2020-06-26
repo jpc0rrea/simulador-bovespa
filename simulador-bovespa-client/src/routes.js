@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 // Pages
 import Home from "./pages/Home";
@@ -13,15 +13,17 @@ import Quote from "./pages/Quote";
 const Routes = () => {
   return (
     <Router>
-      <Route exact path="/" component={Home} />
-      <Route exact path="/login" component={Login} />
-      <Route exact path="/signup" component={Signup} />
-      <Route exact path="/buy" component={Buy} />
-      <Route exact path="/sell" component={Sell} />
-      <Route exact path="/history" component={History} />
-      <Route exact path="/quote" component={Quote} />
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/signup" component={Signup} />
+        <Route exact path="/buy" component={Buy} />
+        <Route exact path="/sell" component={Sell} />
+        <Route exact path="/history" component={History} />
+        <Route exact path="/quote" component={Quote} />
+      </Switch>
     </Router>
   );
 };
 
-export default Routes
+export default Routes;

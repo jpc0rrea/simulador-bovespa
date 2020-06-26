@@ -1,0 +1,37 @@
+div.inputError {
+  color: #cf6679;
+}
+
+div.inputError p {
+  margin-bottom: 0px;
+}
+
+.form-control.error {
+  border: #cf6679 2px solid;
+}
+
+.form-label.error {
+  color: #cf6679;
+}
+
+.form-group {
+  margin-bottom: 0px;
+}
+
+label.form-label {
+  margin-top: 1rem;
+}
+
+button.loginButton.btn.btn-outline-info {
+  margin-top: 1rem;
+}
+
+div.buttonAndSpinner {
+  display: flex;
+  align-items: center;
+}
+
+.progressSpinner {
+  margin-top: 1rem;
+  margin-left: 10px;
+}

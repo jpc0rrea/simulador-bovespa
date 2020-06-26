@@ -16,10 +16,6 @@ body {
   color: white;
 }
 
-.formTitle {
-  margin-bottom: 20px;
-}
-
 .container {
   margin: 80px auto 0 auto;
   max-width: 1200px;
@@ -39,7 +35,7 @@ body {
   border-bottom-right-radius: 6px;
   overflow: hidden;
   position: absolute;
-  width: 100%
+  width: 100%;
 }
 
 .autocomplete-suggestions > div {
