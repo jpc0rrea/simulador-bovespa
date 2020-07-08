@@ -76,7 +76,7 @@ const Login = ({ history }) => {
           onClose={() => setShowErrorAlert(false)}
           dismissible
         >
-          Usuário não encontrado/ senha incorreta. Por favor, tente de novo.
+          Senha incorreta ou usuário na encontrado. Por favor, tente de novo.
         </Alert>
       )}
       <div className="loginForm">
