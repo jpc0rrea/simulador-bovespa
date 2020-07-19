@@ -85,18 +85,18 @@ const getCompaniesBovespa = () => {
 
       res.on("end", () => {
         try {
-            dataOfBovespa = JSON.parse(data);
-            dataOfBovespa.forEach((company) => {
-              bovespaCompanies.push({
-                code: company.Code,
-                name: company.Name,
-                brazilian: company.Code.endsWith("34") ? false : true,
-              });
+          dataOfBovespa = JSON.parse(data);
+          dataOfBovespa.forEach((company) => {
+            bovespaCompanies.push({
+              code: company.Code,
+              name: company.Name,
+              brazilian: company.Code.endsWith("34") ? false : true,
             });
-            resolve(bovespaCompanies)
-        } catch(e) {
-            reject(e)
-        } 
+          });
+          resolve(bovespaCompanies);
+        } catch (e) {
+          reject(e);
+        }
       });
     });
   });

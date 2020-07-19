@@ -27,7 +27,7 @@ exports.getAllTransactions = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      return res.status(500).json({ error: err.code })
+      return res.status(500).json({ error: err.code });
     });
 };
 
@@ -379,7 +379,7 @@ exports.home = (req, res) => {
     .then((transactions) => {
       transactions.forEach((transaction) => {
         let symbol = transaction.data().symbol;
-        let name = transaction.data().name;
+        let name = transaction.data().companyName;
         let quantity;
         if (transaction.data().type === "Venda") {
           quantity = -transaction.data().quantity;
@@ -401,7 +401,17 @@ exports.home = (req, res) => {
     .then(() => {
       getPriceSync(companiesInPortfolio)
         .then((data) => {
-          return res.json({ data });
+          db.doc(`/users/${req.user.uid}`)
+            .get()
+            .then((doc) => {
+              const caixa = doc.data().caixa;
+
+              return res.json({ data, caixa });
+            })
+            .catch((err) => {
+              console.error(err);
+              return res.status(500).json({ error: err.code });
+            });
         })
         .catch((err) => {
           console.error(err);

@@ -5,6 +5,9 @@ function Autocomplete(props) {
   const [label] = useState(props.label);
   const [placeholder] = useState(props.placeholder);
   const [inputedId] = useState(props.controlId);
+  const [inputedLabelId] = useState(props.labelId)
+  const [name] = useState(props.name);
+//   const [onUserTyping] = useState(props.onUserTyping)
   const [options, setOptions] = useState(props.options);
   const [display, setDisplay] = useState(false);
   const [search, setSearch] = useState("");
@@ -49,6 +52,15 @@ function Autocomplete(props) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    props.onUserTyping({
+        target: {
+            name,
+            value: search
+        }
+    })
+  }, [search])
 
   function changeSelectedOptionIndex(keyCode) {
     if (
@@ -95,7 +107,9 @@ function Autocomplete(props) {
       element.classList.remove("selected");
     });
 
-    console.log(event.target)
+    // console.log(event.target)
+    // console.log(event)
+    console.log(search)
   }
 
   function handleClick(event) {
@@ -146,9 +160,10 @@ function Autocomplete(props) {
         ref={wrapperRef}
         controlId={`${inputedId}`}
       >
-        <Form.Label>{label}</Form.Label>
+        <Form.Label id={inputedLabelId}>{label}</Form.Label>
         <Form.Control
           type="search"
+          name={name}
           placeholder={placeholder}
           onClick={() => {
             setDisplay(true);
