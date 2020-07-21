@@ -55,6 +55,7 @@ const Quote = () => {
             placeholder="Digite qual ativo você quer"
             options={companies}
             controlId="autocompleteInput"
+            onUserTyping={() => {}}
           />
           <Button variant="outline-info" type="submit">
             Cotar
