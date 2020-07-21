@@ -4,6 +4,9 @@ import { LogOut } from "react-feather";
 
 
 const HeaderWithCredentials = () => {
+    function handleLogout() {
+        localStorage.removeItem('token')
+    }
   return (
     <>
       <Navbar bg="dark" variant="dark">
@@ -16,7 +19,7 @@ const HeaderWithCredentials = () => {
             <Nav.Link href="/history">Histórico</Nav.Link>
         </Nav>
         <Navbar className="mr-sm-2">
-            <Nav.Link href="/login">
+            <Nav.Link href="/login" onClick={handleLogout}>
                 <LogOut className="logout"/>
                 Sair
             </Nav.Link>

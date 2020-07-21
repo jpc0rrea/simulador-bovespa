@@ -53,6 +53,7 @@ function Autocomplete(props) {
     };
   }, []);
 
+  
   useEffect(() => {
     props.onUserTyping({
         target: {
