@@ -1,23 +1,35 @@
 import React, { useEffect, useState } from "react";
 import HeaderWithCredentials from "../../components/HeaderWithCredentials";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Spinner, Alert } from "react-bootstrap";
 import Autocomplete from "../../components/Autocomplete";
+import BuyConfirmation from "../../components/BuyConfirmation";
 
 import api from "../../services/api";
 
 import "./styles.css";
 
-const Buy = () => {
+const Buy = ({ history }) => {
   const [companies, setCompanies] = useState([]);
   const [formData, setFormData] = useState({
     symbol: "",
     quantity: 0,
   });
+  const [headers, setHeaders] = useState({});
+  const [buyData, setBuyData] = useState({});
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
 
   useEffect(() => {
     api.get("companies").then((bovespaCompanies) => {
       setCompanies(bovespaCompanies.data);
     });
+
+    const token = localStorage.getItem("token");
+    const newHeaders = {
+      Authorization: `Bearer ${token}`,
+    };
+    setHeaders(newHeaders);
   }, []);
 
   function handleInputChange(event) {
@@ -31,32 +43,128 @@ const Buy = () => {
 
   function handleSubmit(event) {
     event.preventDefault();
-    console.log("Oi");
+    setLoading(true);
+    const completeSymbol = formData.symbol.trim()
+    const newSymbol = formData.symbol.split(" - ")[0].trim();
+    console.log(newSymbol);
+    const newFormData = {
+      ...formData,
+      symbol: newSymbol,
+    };
+    setFormData(newFormData);
+    console.log(newFormData);
+    // Validar que o que foi digitado é inteiro e maior que zero
+    // E validar se a empresa é uma das opções
+
+    let newErrors = {
+        symbol: "Por favor, selecione uma das opções listadas."
+    };
+
+    companies.forEach((company) => {
+      if (company.symbol === completeSymbol || company.symbol === newSymbol) {
+          newErrors = {}
+      }
+    });
+
+    // primeiro conferindo se é inteiro
+    if (parseInt(newFormData.quantity) === NaN) {
+      newErrors.quantity = "Deve ser um número inteiro e positivo.";
+    } else if (
+      newFormData.quantity <= 0 ||
+      newFormData.quantity === undefined
+    ) {
+      // conferindo se é maior que zero
+      newErrors.quantity = "Deve ser um número inteiro e positivo.";
+    }
+
+    if (newFormData.symbol === "") {
+      // conferindo se o campo symbol está vazio
+      newErrors.symbol = "Esse campo não pode estar vazio";
+    }
+    setErrors(newErrors);
+    console.log(newErrors);
+    // Pegar cada elemento da tela (input da empresa e da quantidade)
+    // Para poder estilizar ele com erro (caso tenha ocorrido)
+    const symbolInputElement = document.getElementById(
+      "symbolAutocompleteInput"
+    );
+    const symbolLabelElement = document.getElementById("symbol-label");
+    const quantityInputElement = document.getElementById(
+      "formInputSymbolQuantity"
+    );
+    const quantityLabelElement = document.getElementById("quantity-label");
+
+    if (newErrors.quantity) {
+      quantityInputElement.classList.add("error");
+      quantityLabelElement.classList.add("error");
+    } else {
+      quantityInputElement.classList.remove("error");
+      quantityLabelElement.classList.remove("error");
+    }
+
+    if (newErrors.symbol) {
+      symbolInputElement.classList.add("error");
+      symbolLabelElement.classList.add("error");
+    } else {
+      symbolInputElement.classList.remove("error");
+      symbolLabelElement.classList.remove("error");
+    }
+    console.log(!newErrors)
+    if (!newErrors.symbol && !newErrors.quantity) {
+      api
+        .post("buySymbol", newFormData, {
+          headers: headers,
+        })
+        .then((response) => {
+          console.log(response.data);
+          setBuyData(response.data);
+        })
+        .catch(err => {
+            console.error(err)
+        });
+    }
+    setLoading(false);
+  }
+
+  function handleModal() {
+    history.push("/");
   }
 
   return (
     <>
       <HeaderWithCredentials />
+      {buyData.price && (
+        <BuyConfirmation
+          companyName={buyData.companyName}
+          price={buyData.price}
+          quantity={buyData.quantity}
+          symbol={buyData.symbol}
+          total={buyData.total}
+          onHide={handleModal}
+        />
+      )}
       <div className="loginForm">
+        {}
         <h1 className="formTitle">Escolha qual ativo você quer comprar</h1>
         <Form onSubmit={handleSubmit}>
           <Autocomplete
             label="Ativo"
             placeholder="Digite o ativo aqui"
             options={companies}
+            controlId="autocompleteInput"
+            onUserTyping={handleInputChange}
+            name="symbol"
+            controlId="symbolAutocompleteInput"
+            labelId="symbol-label"
           />
-          {/* <Form.Group controlId="formInputSymbol">
-            <Form.Label>Ativo</Form.Label>
-            <Form.Control
-              type="text"
-              name="symbol"
-              placeholder="Digite o ativo aqui"
-              onChange={handleInputChange}
-            />
-          </Form.Group> */}
+          {errors.symbol && (
+            <div className="inputError">
+              <p>{errors.symbol}</p>
+            </div>
+          )}
 
           <Form.Group controlId="formInputSymbolQuantity">
-            <Form.Label>Quantidade de cotas</Form.Label>
+            <Form.Label id="quantity-label">Quantidade de cotas</Form.Label>
             <Form.Control
               type="number"
               min="0"
@@ -65,9 +173,23 @@ const Buy = () => {
               onChange={handleInputChange}
             />
           </Form.Group>
+          {errors.quantity && (
+            <div className="inputError">
+              <p>{errors.quantity}</p>
+            </div>
+          )}
           <Button variant="outline-info" type="submit">
             Comprar
           </Button>
+          {loading && (
+            <Spinner
+              animation="border"
+              variant="outline-info"
+              role="status"
+              className="progressSpinner"
+              aria-hidden="true"
+            />
+          )}
         </Form>
       </div>
     </>

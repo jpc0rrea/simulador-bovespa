@@ -29,7 +29,7 @@ const {
   getAuthenticatedUser,
 } = require("./handlers/users");
 
-const { getAllCompanies } = require('./handlers/companies')
+const { getAllCompanies } = require("./handlers/companies");
 
 // transactions routes
 app.get("/getAllTransactions", FBAuth, getAllTransactions);
@@ -48,7 +48,7 @@ app.post("/user", FBAuth, addUserDetails);
 app.get("/user", FBAuth, getAuthenticatedUser);
 
 // company routes
-app.get('/companies', getAllCompanies)
+app.get("/companies", getAllCompanies);
 
 exports.api = functions.https.onRequest(app);
 
