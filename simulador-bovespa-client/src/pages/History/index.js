@@ -54,15 +54,28 @@ const History = ({ history }) => {
           <>
             <tbody>
               {userHistory.map((transaction, index) => {
+                const date = new Date(transaction.transactedAt);
+                const year = date.getFullYear();
+                const month =
+                  date.getMonth() < 10
+                    ? "0" + date.getMonth()
+                    : date.getMonth();
+                const day =
+                  date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                const hours = date.getHours();
+                const minutes =
+                  date.getMinutes() < 10
+                    ? "0" + date.getMinutes()
+                    : date.getMinutes();
                 return (
                   <tr key={index}>
                     <td>{transaction.symbol}</td>
-                    <td>{transaction.name}</td>
+                    <td>{transaction.companyName}</td>
                     <td>{transaction.quantity}</td>
                     <td>{real(transaction.price)}</td>
                     <td>{real(transaction.total)}</td>
                     <td>{real(transaction.type)}</td>
-                    <td>{real(transaction.transactedAt)}</td>
+                    <td>{`${day}/${month}/${year} - ${hours}:${minutes}`}</td>
                   </tr>
                 );
               })}
