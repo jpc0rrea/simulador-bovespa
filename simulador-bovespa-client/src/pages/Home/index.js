@@ -34,7 +34,7 @@ const Home = ({ history }) => {
 
         // Convertendo a resposta (objeto) em array
         const portfolioArray = [];
-        let newTotalInvested = 0
+        let newTotalInvested = 0;
         for (let company in portfoliObject) {
           portfolioArray.push({
             symbol: company,
@@ -42,16 +42,22 @@ const Home = ({ history }) => {
             price: portfoliObject[company].price,
             quantity: portfoliObject[company].quantity,
             total: portfoliObject[company].total,
+            averagePrice: portfoliObject[company].averagePrice,
+            profitLoss:
+              portfoliObject[company].total -
+              portfoliObject[company].averagePrice *
+                portfoliObject[company].quantity,
           });
-          newTotalInvested += portfoliObject[company].total
+          newTotalInvested += portfoliObject[company].total;
         }
         setTotalInvested(newTotalInvested);
         setPortfolio(portfolioArray);
+        console.log(portfoliObject);
         setDisplay(true);
       })
       .catch((err) => {
         // console.log(err.response.data);
-        console.error(err)
+        console.error(err);
         if (err.response.data.code === "auth/id-token-expired") {
           // Usuário fez login a mais de 1 hora
           // Hora de renovar o token dele
@@ -73,8 +79,10 @@ const Home = ({ history }) => {
             <th>Ação</th>
             <th>Nome</th>
             <th>Quantidade</th>
-            <th>Preço</th>
+            <th>Preço Médio</th>
+            <th>Preço atual</th>
             <th>Total</th>
+            <th>Lucro/ Prejuízo</th>
           </tr>
         </thead>
         {display && (
@@ -86,19 +94,21 @@ const Home = ({ history }) => {
                     <td>{symbolInPortfolio.symbol}</td>
                     <td>{symbolInPortfolio.name}</td>
                     <td>{symbolInPortfolio.quantity}</td>
+                    <td>{real(symbolInPortfolio.averagePrice)}</td>
                     <td>{real(symbolInPortfolio.price)}</td>
                     <td>{real(symbolInPortfolio.total)}</td>
+                    <td>{real(symbolInPortfolio.profitLoss)}</td>
                   </tr>
                 );
               })}
               <tr>
-                <td colSpan={4}>Caixa</td>
+                <td colSpan={6}>Caixa</td>
                 <td>{real(caixa)}</td>
               </tr>
             </tbody>
             <tfoot>
               <tr>
-                <td colSpan={4}>
+                <td colSpan={6}>
                   <strong>Total</strong>
                 </td>
                 <td>

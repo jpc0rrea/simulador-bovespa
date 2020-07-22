@@ -380,6 +380,7 @@ exports.home = (req, res) => {
       transactions.forEach((transaction) => {
         let symbol = transaction.data().symbol;
         let name = transaction.data().companyName;
+        let price = transaction.data().price;
         let quantity;
         if (transaction.data().type === "Venda") {
           quantity = -transaction.data().quantity;
@@ -390,10 +391,13 @@ exports.home = (req, res) => {
         if (symbol in companiesInPortfolio) {
           // se já tivermos, atualizar o valor da quantidade
           companiesInPortfolio[symbol].quantity += quantity;
+          companiesInPortfolio[symbol].averagePrice =
+            (companiesInPortfolio[symbol].averagePrice + price) / 2;
         } else {
           companiesInPortfolio[symbol] = {
             name,
             quantity,
+            averagePrice: price,
           };
         }
       });
