@@ -50,9 +50,10 @@ const Home = ({ history }) => {
           });
           newTotalInvested += portfoliObject[company].total;
         }
+        // ordenar o array por total em carteira
+        portfolioArray.sort((a, b) => parseFloat(b.total) - parseFloat(a.total))
         setTotalInvested(newTotalInvested);
         setPortfolio(portfolioArray);
-        console.log(portfoliObject);
         setDisplay(true);
       })
       .catch((err) => {
@@ -90,7 +91,7 @@ const Home = ({ history }) => {
             <tbody>
               {portfolio.map((symbolInPortfolio, index) => {
                 return (
-                  <tr key={index}>
+                  <tr key={index} className={symbolInPortfolio.profitLoss < 0 ? "loss" : "profit"}>
                     <td>{symbolInPortfolio.symbol}</td>
                     <td>{symbolInPortfolio.name}</td>
                     <td>{symbolInPortfolio.quantity}</td>
@@ -107,7 +108,7 @@ const Home = ({ history }) => {
               </tr>
             </tbody>
             <tfoot>
-              <tr>
+              <tr className={totalInvested + caixa < 10000 ? "loss" : "profit"}>
                 <td colSpan={6}>
                   <strong>Total</strong>
                 </td>
