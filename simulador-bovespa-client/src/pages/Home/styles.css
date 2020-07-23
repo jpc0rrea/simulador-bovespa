@@ -3,3 +3,11 @@
     margin: auto;
     margin-top: 24px
 }
+
+tr.profit {
+    color: #3cc33a
+}
+
+tr.loss {
+    color: #c33a3a
+}
