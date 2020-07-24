@@ -46,7 +46,6 @@ const Buy = ({ history }) => {
     setLoading(true);
     const completeSymbol = formData.symbol.trim()
     const newSymbol = formData.symbol.split(" - ")[0].trim();
-    console.log(newSymbol);
     const newFormData = {
       ...formData,
       symbol: newSymbol,
@@ -82,7 +81,6 @@ const Buy = ({ history }) => {
       newErrors.symbol = "Esse campo não pode estar vazio";
     }
     setErrors(newErrors);
-    console.log(newErrors);
     // Pegar cada elemento da tela (input da empresa e da quantidade)
     // Para poder estilizar ele com erro (caso tenha ocorrido)
     const symbolInputElement = document.getElementById(
@@ -109,7 +107,6 @@ const Buy = ({ history }) => {
       symbolInputElement.classList.remove("error");
       symbolLabelElement.classList.remove("error");
     }
-    console.log(!newErrors)
     if (!newErrors.symbol && !newErrors.quantity) {
       api
         .post("buySymbol", newFormData, {
@@ -144,7 +141,6 @@ const Buy = ({ history }) => {
         />
       )}
       <div className="loginForm">
-        {}
         <h1 className="formTitle">Escolha qual ativo você quer comprar</h1>
         <Form onSubmit={handleSubmit}>
           <Autocomplete

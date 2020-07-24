@@ -57,9 +57,11 @@ const History = ({ history }) => {
                 const date = new Date(transaction.transactedAt);
                 const year = date.getFullYear();
                 const month =
-                  date.getMonth() < 10
-                    ? "0" + date.getMonth()
-                    : date.getMonth();
+                  date.getMonth() + 1 < 10
+                    ? "0" + (date.getMonth() + 1)
+                    : date.getMonth() + 1 == 13
+                    ? "01"
+                    : date.getMonth() + 1;
                 const day =
                   date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
                 const hours = date.getHours();
