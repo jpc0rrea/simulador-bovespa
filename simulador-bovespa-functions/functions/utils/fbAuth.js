@@ -26,6 +26,7 @@ const FBAuth = (req, res, next) => {
       req.user.email = data.data().email;
       req.user.name = data.data().name;
       req.user.imageUrl = data.data().imageUrl;
+      req.user.caixa = data.data().caixa
       return next(); // next() deixa a requisição continuar
     })
     .catch((err) => {

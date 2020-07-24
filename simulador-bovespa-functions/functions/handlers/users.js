@@ -193,3 +193,7 @@ exports.getAuthenticatedUser = (req, res) => {
       return res.status(500).json({ error: err.code });
     });
 };
+
+exports.getCaixa = (req, res) => {
+    return res.json({caixa: req.user.caixa})
+}

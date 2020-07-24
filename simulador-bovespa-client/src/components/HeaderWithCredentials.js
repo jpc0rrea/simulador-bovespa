@@ -1,12 +1,19 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import { LogOut } from "react-feather";
 
 
-const HeaderWithCredentials = () => {
+const HeaderWithCredentials = (props) => {
+    const [caixa, setCaixa] = useState(props.caixa)
+
+    useEffect(() => {
+        setCaixa(props.caixa)
+    }, [props.caixa])
+
     function handleLogout() {
         localStorage.removeItem('token')
     }
+
   return (
     <>
       <Navbar bg="dark" variant="dark">
@@ -19,6 +26,9 @@ const HeaderWithCredentials = () => {
             <Nav.Link href="/history">Histórico</Nav.Link>
         </Nav>
         <Navbar className="mr-sm-2">
+            <Navbar.Text>
+                Caixa: {caixa}
+            </Navbar.Text>
             <Nav.Link href="/login" onClick={handleLogout}>
                 <LogOut className="logout"/>
                 Sair

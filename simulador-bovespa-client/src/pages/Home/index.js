@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 
 import HeaderWithCredentials from "../../components/HeaderWithCredentials";
+import ExpiredSessionMessage from "../../components/ExpiredSessionMessage";
 
 import api from "../../services/api";
 import real from "../../services/real";
@@ -15,10 +16,13 @@ const Home = ({ history }) => {
   const [caixa, setCaixa] = useState(0);
   const [totalInvested, setTotalInvested] = useState(0);
   const [display, setDisplay] = useState(false);
+  const [expiredSession, setExpiredSession] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log(token);
+    if (!token) {
+      setExpiredSession(true);
+    }
     const headers = {
       Authorization: `Bearer ${token}`,
     };
@@ -51,7 +55,9 @@ const Home = ({ history }) => {
           newTotalInvested += portfoliObject[company].total;
         }
         // ordenar o array por total em carteira
-        portfolioArray.sort((a, b) => parseFloat(b.total) - parseFloat(a.total))
+        portfolioArray.sort(
+          (a, b) => parseFloat(b.total) - parseFloat(a.total)
+        );
         setTotalInvested(newTotalInvested);
         setPortfolio(portfolioArray);
         setDisplay(true);
@@ -62,11 +68,10 @@ const Home = ({ history }) => {
         if (err.response.data.code === "auth/id-token-expired") {
           // Usuário fez login a mais de 1 hora
           // Hora de renovar o token dele
-          localStorage.removeItem("token");
-          history.push("/login");
+          setExpiredSession(true);
         } else if (err.response.data.code === "auth/argument-error") {
           // ainda não tem nenhum token na session do usuário
-          history.push("/login");
+          setExpiredSession(true);
         }
       });
   }, []);
@@ -74,6 +79,7 @@ const Home = ({ history }) => {
   return (
     <>
       <HeaderWithCredentials />
+      {expiredSession && <ExpiredSessionMessage history={history} />}
       <Table responsive>
         <thead>
           <tr>
@@ -91,7 +97,12 @@ const Home = ({ history }) => {
             <tbody>
               {portfolio.map((symbolInPortfolio, index) => {
                 return (
-                  <tr key={index} className={symbolInPortfolio.profitLoss < 0 ? "loss" : "profit"}>
+                  <tr
+                    key={index}
+                    className={
+                      symbolInPortfolio.profitLoss < 0 ? "loss" : "profit"
+                    }
+                  >
                     <td>{symbolInPortfolio.symbol}</td>
                     <td>{symbolInPortfolio.name}</td>
                     <td>{symbolInPortfolio.quantity}</td>

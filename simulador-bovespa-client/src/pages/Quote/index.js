@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import HeaderWithCredentials from "../../components/HeaderWithCredentials";
 import { Form, Button } from "react-bootstrap";
+
+import HeaderWithCredentials from "../../components/HeaderWithCredentials";
+import HeaderWithoutCredentials from "../../components/HeaderWithoutCredentials";
 import Autocomplete from "../../components/Autocomplete";
 
 import api from "../../services/api";
@@ -14,8 +16,11 @@ const Quote = () => {
   const [price, setPrice] = useState(0);
   const [name, setName] = useState("");
   const [symbol, setSymbol] = useState("");
+  const [token, setToken] = useState("");
 
   useEffect(() => {
+    const newToken = localStorage.getItem("token");
+    setToken(newToken);
     api.get("companies").then((bovespaCompanies) => {
       setCompanies(bovespaCompanies.data);
     });
@@ -46,7 +51,8 @@ const Quote = () => {
 
   return (
     <>
-      <HeaderWithCredentials />
+      {!token && <HeaderWithoutCredentials />}
+      {token && <HeaderWithCredentials />}
       <div className="loginForm">
         <h1 className="formTitle">Escolha qual ativo você quer cotar</h1>
         <Form onSubmit={handleSubmit}>
@@ -64,7 +70,7 @@ const Quote = () => {
         <div className="quoteResponse">
           {showPrice && (
             <p>
-              Uma cota de <strong>{name}</strong> ({symbol}) está custando {' '}
+              Uma cota de <strong>{name}</strong> ({symbol}) está custando{" "}
               <strong>{real(price)}</strong>
             </p>
           )}

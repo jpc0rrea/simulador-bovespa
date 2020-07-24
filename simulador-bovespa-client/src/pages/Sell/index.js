@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import HeaderWithCredentials from "../../components/HeaderWithCredentials";
 import { Form, Button, Spinner } from "react-bootstrap";
+
 import Autocomplete from "../../components/Autocomplete";
 import SellConfirmation from "../../components/SellConfirmation";
+import ExpiredSessionMessage from "../../components/ExpiredSessionMessage";
 
 import api from "../../services/api";
 
@@ -17,10 +19,14 @@ const Sell = ({ history }) => {
   const [headers, setHeaders] = useState({});
   const [loading, setLoading] = useState(false);
   const [sellData, setSellData] = useState({});
+  const [expiredSession, setExpiredSession] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log(token);
+    // Se não tiver token já da o aviso que a sessão expirou
+    if (!token) {
+      setExpiredSession(true);
+    }
     const newHeaders = {
       Authorization: `Bearer ${token}`,
     };
@@ -57,16 +63,14 @@ const Sell = ({ history }) => {
         setCompanies(portfolioArray);
       })
       .catch((err) => {
-        // console.log(err.response.data);
         console.error(err);
         if (err.response.data.code === "auth/id-token-expired") {
           // Usuário fez login a mais de 1 hora
           // Hora de renovar o token dele
-          localStorage.removeItem("token");
-          history.push("/login");
+          setExpiredSession(true);
         } else if (err.response.data.code === "auth/argument-error") {
           // ainda não tem nenhum token na session do usuário
-          history.push("/login");
+          setExpiredSession(true);
         }
       });
   }, []);
@@ -130,7 +134,7 @@ const Sell = ({ history }) => {
       // conferindo se o campo symbol está vazio
       newErrors.symbol = "Esse campo não pode estar vazio";
     }
-    setErrors(newErrors)
+    setErrors(newErrors);
 
     // Pegar cada elemento da tela (input da empresa e da quantidade )
     // para poder estilizar em caso de erro
@@ -160,17 +164,20 @@ const Sell = ({ history }) => {
     }
 
     if (!newErrors.symbol && !newErrors.quantity) {
-        api.post('sellSymbol', newFormData, {
-            headers: headers
-        }).then((response) => {
-            console.log(response.data)
-            setSellData(response.data)
-        }).catch(err => {
-            console.error(err)
+      api
+        .post("sellSymbol", newFormData, {
+          headers: headers,
         })
+        .then((response) => {
+          console.log(response.data);
+          setSellData(response.data);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     }
 
-    setLoading(false)
+    setLoading(false);
   }
 
   function handleModal() {
@@ -190,6 +197,7 @@ const Sell = ({ history }) => {
           onHide={handleModal}
         />
       )}
+      {expiredSession && <ExpiredSessionMessage history={history} />}
       <div className="loginForm">
         <h1 className="formTitle">Escolha qual ativo você quer vender</h1>
         <Form onSubmit={handleSubmit}>
@@ -223,18 +231,20 @@ const Sell = ({ history }) => {
               <p>{errors.quantity}</p>
             </div>
           )}
-          <Button variant="outline-info" type="submit">
-            Vender
-          </Button>
-          {loading && (
-            <Spinner
-              animation="border"
-              variant="outline-info"
-              role="status"
-              className="progressSpinner"
-              aria-hidden="true"
-            />
-          )}
+          <div className="buttonAndSpinner">
+            <Button variant="outline-info" type="submit">
+              Vender
+            </Button>
+            {loading && (
+              <Spinner
+                animation="border"
+                variant="outline-info"
+                role="status"
+                className="progressSpinner"
+                aria-hidden="true"
+              />
+            )}
+          </div>
         </Form>
       </div>
     </>
