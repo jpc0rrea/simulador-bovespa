@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
+
 import HeaderWithCredentials from "../../components/HeaderWithCredentials";
+import ExpiredSessionMessage from "../../components/ExpiredSessionMessage";
 
 import api from "../../services/api";
 import real from "../../services/real";
@@ -8,8 +10,13 @@ import real from "../../services/real";
 const History = ({ history }) => {
   const [userHistory, setUserHistory] = useState([]);
   const [display, setDisplay] = useState(false);
+  const [expiredSession, setExpiredSession] = useState(false);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
+    if (!token) {
+      setExpiredSession(true);
+    }
     const headers = {
       Authorization: `Bearer ${token}`,
     };
@@ -27,17 +34,17 @@ const History = ({ history }) => {
         if (err.response.data.code === "auth/id-token-expired") {
           // Usuário fez login a mais de 1 hora
           // Hora de renovar o token dele
-          localStorage.removeItem("token");
-          history.push("/login");
+          setExpiredSession(true);
         } else if (err.response.data.code === "auth/argument-error") {
           // ainda não tem nenhum token na session do usuário
-          history.push("/login");
+          setExpiredSession(true);
         }
       });
   }, []);
   return (
     <>
       <HeaderWithCredentials />
+      {expiredSession && <ExpiredSessionMessage history={history} />}
       <Table responsive>
         <thead>
           <tr>
@@ -57,9 +64,11 @@ const History = ({ history }) => {
                 const date = new Date(transaction.transactedAt);
                 const year = date.getFullYear();
                 const month =
-                  date.getMonth() < 10
-                    ? "0" + date.getMonth()
-                    : date.getMonth();
+                  date.getMonth() + 1 < 10
+                    ? "0" + (date.getMonth() + 1)
+                    : date.getMonth() + 1 === 13
+                    ? "01"
+                    : date.getMonth() + 1;
                 const day =
                   date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
                 const hours = date.getHours();

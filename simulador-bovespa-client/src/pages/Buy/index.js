@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import HeaderWithCredentials from "../../components/HeaderWithCredentials";
 import { Form, Button, Spinner, Alert } from "react-bootstrap";
+
 import Autocomplete from "../../components/Autocomplete";
 import BuyConfirmation from "../../components/BuyConfirmation";
+import ExpiredSessionMessage from "../../components/ExpiredSessionMessage";
 
 import api from "../../services/api";
 
 import "./styles.css";
+import real from "../../services/real";
 
 const Buy = ({ history }) => {
   const [companies, setCompanies] = useState([]);
@@ -19,17 +22,28 @@ const Buy = ({ history }) => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [expiredSession, setExpiredSession] = useState(false);
+  const [caixa, setCaixa] = useState(0)
 
   useEffect(() => {
-    api.get("companies").then((bovespaCompanies) => {
-      setCompanies(bovespaCompanies.data);
-    });
-
     const token = localStorage.getItem("token");
     const newHeaders = {
       Authorization: `Bearer ${token}`,
     };
+    // Se não tiver token já da o aviso que a sessão expirou
+    if (!token) {
+      setExpiredSession(true);
+    }
     setHeaders(newHeaders);
+    api.get("companies").then((bovespaCompanies) => {
+      setCompanies(bovespaCompanies.data);
+    });
+    api.get("caixa", {
+        headers: newHeaders
+    }).then(response => {
+        const userCaixa = response.data.caixa
+        setCaixa(userCaixa)
+    })
   }, []);
 
   function handleInputChange(event) {
@@ -44,9 +58,8 @@ const Buy = ({ history }) => {
   function handleSubmit(event) {
     event.preventDefault();
     setLoading(true);
-    const completeSymbol = formData.symbol.trim()
+    const completeSymbol = formData.symbol.trim();
     const newSymbol = formData.symbol.split(" - ")[0].trim();
-    console.log(newSymbol);
     const newFormData = {
       ...formData,
       symbol: newSymbol,
@@ -57,12 +70,12 @@ const Buy = ({ history }) => {
     // E validar se a empresa é uma das opções
 
     let newErrors = {
-        symbol: "Por favor, selecione uma das opções listadas."
+      symbol: "Por favor, selecione uma das opções listadas.",
     };
 
     companies.forEach((company) => {
       if (company.symbol === completeSymbol || company.symbol === newSymbol) {
-          newErrors = {}
+        newErrors = {};
       }
     });
 
@@ -82,7 +95,6 @@ const Buy = ({ history }) => {
       newErrors.symbol = "Esse campo não pode estar vazio";
     }
     setErrors(newErrors);
-    console.log(newErrors);
     // Pegar cada elemento da tela (input da empresa e da quantidade)
     // Para poder estilizar ele com erro (caso tenha ocorrido)
     const symbolInputElement = document.getElementById(
@@ -109,7 +121,6 @@ const Buy = ({ history }) => {
       symbolInputElement.classList.remove("error");
       symbolLabelElement.classList.remove("error");
     }
-    console.log(!newErrors)
     if (!newErrors.symbol && !newErrors.quantity) {
       api
         .post("buySymbol", newFormData, {
@@ -117,10 +128,18 @@ const Buy = ({ history }) => {
         })
         .then((response) => {
           console.log(response.data);
-          setBuyData(response.data);
+            setBuyData(response.data);
         })
-        .catch(err => {
-            console.error(err)
+        .catch((err) => {
+          console.error(err);
+          if (err.response.data.code === "auth/id-token-expired") {
+            // Usuário fez login a mais de 1 hora
+            // Hora de renovar o token dele
+            setExpiredSession(true);
+          } else if (err.response.data.code === "auth/argument-error") {
+            // ainda não tem nenhum token na session do usuário
+            setExpiredSession(true);
+          }
         });
     }
     setLoading(false);
@@ -132,7 +151,7 @@ const Buy = ({ history }) => {
 
   return (
     <>
-      <HeaderWithCredentials />
+      <HeaderWithCredentials caixa={real(caixa)} />
       {buyData.price && (
         <BuyConfirmation
           companyName={buyData.companyName}
@@ -143,8 +162,8 @@ const Buy = ({ history }) => {
           onHide={handleModal}
         />
       )}
+      {expiredSession && <ExpiredSessionMessage history={history} />}
       <div className="loginForm">
-        {}
         <h1 className="formTitle">Escolha qual ativo você quer comprar</h1>
         <Form onSubmit={handleSubmit}>
           <Autocomplete
@@ -178,18 +197,20 @@ const Buy = ({ history }) => {
               <p>{errors.quantity}</p>
             </div>
           )}
-          <Button variant="outline-info" type="submit">
-            Comprar
-          </Button>
-          {loading && (
-            <Spinner
-              animation="border"
-              variant="outline-info"
-              role="status"
-              className="progressSpinner"
-              aria-hidden="true"
-            />
-          )}
+          <div className="buttonAndSpinner">
+            <Button variant="outline-info" type="submit">
+              Comprar
+            </Button>
+            {loading && (
+              <Spinner
+                animation="border"
+                variant="outline-info"
+                role="status"
+                className="progressSpinner"
+                aria-hidden="true"
+              />
+            )}
+          </div>
         </Form>
       </div>
     </>
