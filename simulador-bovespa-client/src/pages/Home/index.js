@@ -21,7 +21,7 @@ const Home = ({ history }) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      setExpiredSession(true);
+      history.push("/login");
     }
     const headers = {
       Authorization: `Bearer ${token}`,
