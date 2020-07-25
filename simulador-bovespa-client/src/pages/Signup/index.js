@@ -39,7 +39,6 @@ const Signup = ({ history }) => {
       .catch((err) => {
         // Vou conferir cada um dos possíveis erros e atualizar na tela
         const newErrors = err.response.data;
-        console.log(newErrors);
         setErrors(newErrors);
 
         // conferindo erros relacionados ao email
@@ -49,7 +48,6 @@ const Signup = ({ history }) => {
           emailInputElement.classList.add("error");
           emailLabelElement.classList.add("error");
         } else {
-          console.log(emailInputElement.classList);
           emailInputElement.classList.remove("error");
           emailLabelElement.classList.remove("error");
         }

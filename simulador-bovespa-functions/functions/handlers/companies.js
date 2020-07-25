@@ -17,7 +17,6 @@ exports.getAllCompanies = async (req, res) => {
       Object.keys(allCompanies)
         .sort()
         .forEach((companyCode, index) => {
-          console.log(companyCode, index);
           if (companyCode === allCompanies[companyCode]) {
             console.log(
               `A empresa ${companyCode} está com problema, logo não foi adicionada a lista.`

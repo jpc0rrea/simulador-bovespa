@@ -5,9 +5,9 @@ function Autocomplete(props) {
   const [label] = useState(props.label);
   const [placeholder] = useState(props.placeholder);
   const [inputedId] = useState(props.controlId);
-  const [inputedLabelId] = useState(props.labelId)
+  const [inputedLabelId] = useState(props.labelId);
   const [name] = useState(props.name);
-//   const [onUserTyping] = useState(props.onUserTyping)
+  //   const [onUserTyping] = useState(props.onUserTyping)
   const [options, setOptions] = useState(props.options);
   const [display, setDisplay] = useState(false);
   const [search, setSearch] = useState("");
@@ -53,15 +53,14 @@ function Autocomplete(props) {
     };
   }, []);
 
-  
   useEffect(() => {
     props.onUserTyping({
-        target: {
-            name,
-            value: search
-        }
-    })
-  }, [search])
+      target: {
+        name,
+        value: search,
+      },
+    });
+  }, [search]);
 
   function changeSelectedOptionIndex(keyCode) {
     if (
@@ -107,10 +106,6 @@ function Autocomplete(props) {
     allOptions.forEach((element) => {
       element.classList.remove("selected");
     });
-
-    // console.log(event.target)
-    // console.log(event)
-    console.log(search)
   }
 
   function handleClick(event) {

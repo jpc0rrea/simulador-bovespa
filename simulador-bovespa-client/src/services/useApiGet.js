@@ -9,7 +9,6 @@ const useApiGet = (url, params) => {
       .get(url, params)
       .then((response) => {
         data = response;
-        console.log(response)
         return data;
       })
       .catch((err) => {
