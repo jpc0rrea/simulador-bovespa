@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import HeaderWithCredentials from "../../components/HeaderWithCredentials";
-import { Form, Button, Spinner } from "react-bootstrap";
+import { Form, Button, Spinner, Alert } from "react-bootstrap";
 
 import Autocomplete from "../../components/Autocomplete";
 import BuyConfirmation from "../../components/BuyConfirmation";
@@ -23,6 +23,8 @@ const Buy = ({ history }) => {
   const [loading, setLoading] = useState(false);
   const [expiredSession, setExpiredSession] = useState(false);
   const [caixa, setCaixa] = useState(0);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("")
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -149,6 +151,12 @@ const Buy = ({ history }) => {
             // ainda não tem nenhum token na session do usuário
             setExpiredSession(true);
           }
+          if (err.response.data.type === "Saldo insuficiente") {
+              // Usuário não tem saldo suficiente para a transação
+            const newErrorMessage = err.response.data.message
+            setShowErrorAlert(true)
+            setErrorMessage(newErrorMessage)
+          }
         });
     }
     setLoading(false);
@@ -161,6 +169,15 @@ const Buy = ({ history }) => {
   return (
     <>
       <HeaderWithCredentials caixa={real(caixa)} />
+      {showErrorAlert && (
+        <Alert
+          variant="danger"
+          onClose={() => setShowErrorAlert(false)}
+          dismissible
+        >
+          {errorMessage}
+        </Alert>
+      )}
       {buyData.price && (
         <BuyConfirmation
           companyName={buyData.companyName}
