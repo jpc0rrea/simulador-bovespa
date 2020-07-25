@@ -23,7 +23,7 @@ const Buy = ({ history }) => {
   const [loading, setLoading] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [expiredSession, setExpiredSession] = useState(false);
-  const [caixa, setCaixa] = useState(0)
+  const [caixa, setCaixa] = useState(0);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -38,12 +38,25 @@ const Buy = ({ history }) => {
     api.get("companies").then((bovespaCompanies) => {
       setCompanies(bovespaCompanies.data);
     });
-    api.get("caixa", {
-        headers: newHeaders
-    }).then(response => {
-        const userCaixa = response.data.caixa
-        setCaixa(userCaixa)
-    })
+    api
+      .get("caixa", {
+        headers: newHeaders,
+      })
+      .then((response) => {
+        const userCaixa = response.data.caixa;
+        setCaixa(userCaixa);
+      })
+      .catch((err) => {
+        console.error(err);
+        if (err.response.data.code === "auth/id-token-expired") {
+          // Usuário fez login a mais de 1 hora
+          // Hora de renovar o token dele
+          setExpiredSession(true);
+        } else if (err.response.data.code === "auth/argument-error") {
+          // ainda não tem nenhum token na session do usuário
+          setExpiredSession(true);
+        }
+      });
   }, []);
 
   function handleInputChange(event) {
@@ -128,7 +141,7 @@ const Buy = ({ history }) => {
         })
         .then((response) => {
           console.log(response.data);
-            setBuyData(response.data);
+          setBuyData(response.data);
         })
         .catch((err) => {
           console.error(err);

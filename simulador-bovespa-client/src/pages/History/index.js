@@ -11,6 +11,7 @@ const History = ({ history }) => {
   const [userHistory, setUserHistory] = useState([]);
   const [display, setDisplay] = useState(false);
   const [expiredSession, setExpiredSession] = useState(false);
+  const [caixa, setCaixa] = useState(0);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -21,11 +22,29 @@ const History = ({ history }) => {
       Authorization: `Bearer ${token}`,
     };
     api
+      .get("caixa", {
+        headers,
+      })
+      .then((response) => {
+        const userCaixa = response.data.caixa;
+        setCaixa(userCaixa);
+      })
+      .catch((err) => {
+        console.error(err);
+        if (err.response.data.code === "auth/id-token-expired") {
+          // Usuário fez login a mais de 1 hora
+          // Hora de renovar o token dele
+          setExpiredSession(true);
+        } else if (err.response.data.code === "auth/argument-error") {
+          // ainda não tem nenhum token na session do usuário
+          setExpiredSession(true);
+        }
+      });
+    api
       .get("getAllTransactions", {
         headers,
       })
       .then((response) => {
-        console.log(response.data);
         setUserHistory(response.data);
         setDisplay(true);
       })
@@ -43,7 +62,7 @@ const History = ({ history }) => {
   }, []);
   return (
     <>
-      <HeaderWithCredentials />
+      <HeaderWithCredentials caixa={real(caixa)}/>
       {expiredSession && <ExpiredSessionMessage history={history} />}
       <Table responsive>
         <thead>
