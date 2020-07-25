@@ -7,6 +7,7 @@ import SellConfirmation from "../../components/SellConfirmation";
 import ExpiredSessionMessage from "../../components/ExpiredSessionMessage";
 
 import api from "../../services/api";
+import real from "../../services/real";
 
 const Sell = ({ history }) => {
   const [companies, setCompanies] = useState([]);
@@ -20,6 +21,7 @@ const Sell = ({ history }) => {
   const [loading, setLoading] = useState(false);
   const [sellData, setSellData] = useState({});
   const [expiredSession, setExpiredSession] = useState(false);
+  const [caixa, setCaixa] = useState(0);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -38,6 +40,8 @@ const Sell = ({ history }) => {
         headers: newHeaders,
       })
       .then((response) => {
+        const userCaixa = response.data.caixa;
+        setCaixa(userCaixa);
         const portfoliObject = response.data.data;
         // Convertendo a resposta (objeto) em array
         const portfolioArray = [];
@@ -186,7 +190,7 @@ const Sell = ({ history }) => {
 
   return (
     <>
-      <HeaderWithCredentials />
+      <HeaderWithCredentials caixa={real(caixa)} />
       {sellData.price && (
         <SellConfirmation
           companyName={sellData.companyName}

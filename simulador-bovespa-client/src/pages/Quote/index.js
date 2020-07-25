@@ -17,13 +17,37 @@ const Quote = () => {
   const [name, setName] = useState("");
   const [symbol, setSymbol] = useState("");
   const [token, setToken] = useState("");
+   const [caixa, setCaixa] = useState(0);
 
   useEffect(() => {
     const newToken = localStorage.getItem("token");
     setToken(newToken);
+    const newHeaders = {
+      Authorization: `Bearer ${newToken}`,
+    };
     api.get("companies").then((bovespaCompanies) => {
       setCompanies(bovespaCompanies.data);
     });
+    // pegar a informação do caixa
+     api
+      .get("caixa", {
+        headers: newHeaders,
+      })
+      .then((response) => {
+        const userCaixa = response.data.caixa;
+        setCaixa(userCaixa);
+      })
+      .catch((err) => {
+        console.error(err);
+        if (err.response.data.code === "auth/id-token-expired") {
+          // Usuário fez login a mais de 1 hora
+          // Hora de renovar o token dele
+          setToken("")
+        } else if (err.response.data.code === "auth/argument-error") {
+          // ainda não tem nenhum token na session do usuário
+          setToken("")
+        }
+      });
   }, []);
 
   function handleSubmit(event) {
@@ -52,7 +76,7 @@ const Quote = () => {
   return (
     <>
       {!token && <HeaderWithoutCredentials />}
-      {token && <HeaderWithCredentials />}
+      {token && <HeaderWithCredentials caixa={real(caixa)} />}
       <div className="loginForm">
         <h1 className="formTitle">Escolha qual ativo você quer cotar</h1>
         <Form onSubmit={handleSubmit}>

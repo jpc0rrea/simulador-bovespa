@@ -78,7 +78,7 @@ const Home = ({ history }) => {
 
   return (
     <>
-      <HeaderWithCredentials />
+      <HeaderWithCredentials caixa={real(caixa)} />
       {expiredSession && <ExpiredSessionMessage history={history} />}
       <Table responsive>
         <thead>
