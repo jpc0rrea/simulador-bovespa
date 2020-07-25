@@ -31,13 +31,10 @@ const Login = ({ history }) => {
         if (response.data.token) {
           localStorage.setItem("token", response.data.token);
           history.push("/");
-        } else {
-          console.log(response.data);
         }
       })
       .catch((err) => {
         const newErrors = err.response.data;
-        console.log(newErrors);
         setErrors(newErrors);
         const emailInputElement = document.getElementById("formBasicEmail");
         const emailLabelElement = document.getElementById("email-label");
@@ -49,7 +46,6 @@ const Login = ({ history }) => {
           emailInputElement.classList.add("error");
           emailLabelElement.classList.add("error");
         } else {
-          console.log(emailInputElement.classList);
           emailInputElement.classList.remove("error");
           emailLabelElement.classList.remove("error");
         }

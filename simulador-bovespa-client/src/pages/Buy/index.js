@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import HeaderWithCredentials from "../../components/HeaderWithCredentials";
-import { Form, Button, Spinner, Alert } from "react-bootstrap";
+import { Form, Button, Spinner } from "react-bootstrap";
 
 import Autocomplete from "../../components/Autocomplete";
 import BuyConfirmation from "../../components/BuyConfirmation";
@@ -21,7 +21,6 @@ const Buy = ({ history }) => {
   const [buyData, setBuyData] = useState({});
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [expiredSession, setExpiredSession] = useState(false);
   const [caixa, setCaixa] = useState(0);
 
@@ -65,7 +64,6 @@ const Buy = ({ history }) => {
       value = parseInt(value);
     }
     setFormData({ ...formData, [name]: value });
-    console.log(formData);
   }
 
   function handleSubmit(event) {
@@ -78,7 +76,6 @@ const Buy = ({ history }) => {
       symbol: newSymbol,
     };
     setFormData(newFormData);
-    console.log(newFormData);
     // Validar que o que foi digitado é inteiro e maior que zero
     // E validar se a empresa é uma das opções
 
@@ -93,7 +90,7 @@ const Buy = ({ history }) => {
     });
 
     // primeiro conferindo se é inteiro
-    if (parseInt(newFormData.quantity) === NaN) {
+    if (isNaN(parseInt(newFormData.quantity))) {
       newErrors.quantity = "Deve ser um número inteiro e positivo.";
     } else if (
       newFormData.quantity <= 0 ||
@@ -140,7 +137,6 @@ const Buy = ({ history }) => {
           headers: headers,
         })
         .then((response) => {
-          console.log(response.data);
           setBuyData(response.data);
         })
         .catch((err) => {
@@ -183,7 +179,6 @@ const Buy = ({ history }) => {
             label="Ativo"
             placeholder="Digite o ativo aqui"
             options={companies}
-            controlId="autocompleteInput"
             onUserTyping={handleInputChange}
             name="symbol"
             controlId="symbolAutocompleteInput"

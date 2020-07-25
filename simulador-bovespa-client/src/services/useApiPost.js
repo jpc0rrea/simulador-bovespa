@@ -9,7 +9,6 @@ const useApiPost = (url, params) => {
       .post(url, params)
       .then((response) => {
         data = response;
-        console.log(response)
         return data;
       })
       .catch((err) => {

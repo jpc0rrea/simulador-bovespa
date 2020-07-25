@@ -63,7 +63,6 @@ const Home = ({ history }) => {
         setDisplay(true);
       })
       .catch((err) => {
-        // console.log(err.response.data);
         console.error(err);
         if (err.response.data.code === "auth/id-token-expired") {
           // Usuário fez login a mais de 1 hora

@@ -15,7 +15,6 @@ const Sell = ({ history }) => {
     symbol: "",
     quantity: 0,
   });
-  const [maxQuantity, setMaxQuantity] = useState(0);
   const [errors, setErrors] = useState({});
   const [headers, setHeaders] = useState({});
   const [loading, setLoading] = useState(false);
@@ -81,13 +80,10 @@ const Sell = ({ history }) => {
 
   function handleInputChange(event) {
     var { name, value } = event.target;
-    console.log(event.target);
-    console.log(name);
     if (name === "quantity") {
       value = parseInt(value);
     }
     setFormData({ ...formData, [name]: value });
-    console.log(formData);
   }
 
   function handleSubmit(event) {
@@ -108,18 +104,17 @@ const Sell = ({ history }) => {
 
     // Vou começar o objeto de erros já com o erro que a opção não está na lista
     // Se ela estiver na lista, eu removo esse erro
-    let newMaxQuantity = 0;
+    let maxQuantity = 0;
     companies.forEach((company) => {
       if (company.symbol === completeSymbol || company.symbol === newSymbol) {
         newErrors = {};
-        newMaxQuantity = company.quantity;
-        setMaxQuantity(newMaxQuantity);
+        maxQuantity = company.quantity;
         // Pegar a quantidade de ações que eu tenho em carteira
       }
     });
 
     // primeiro conferindo se é inteiro
-    if (parseInt(newFormData.quantity) === NaN) {
+    if (isNaN(parseInt(newFormData.quantity))) {
       newErrors.quantity = "Deve ser um número inteiro e positivo.";
     } else if (
       newFormData.quantity <= 0 ||
@@ -130,8 +125,8 @@ const Sell = ({ history }) => {
     }
 
     // conferindo se a quantidade é maior do total de ações
-    if (newFormData.quantity > newMaxQuantity) {
-      newErrors.quantity = `Você tem ${newMaxQuantity} ações de ${newFormData.symbol}`;
+    if (newFormData.quantity > maxQuantity) {
+      newErrors.quantity = `Você tem ${maxQuantity} ações de ${newFormData.symbol}`;
     }
 
     if (newFormData.symbol === "") {
@@ -173,7 +168,6 @@ const Sell = ({ history }) => {
           headers: headers,
         })
         .then((response) => {
-          console.log(response.data);
           setSellData(response.data);
         })
         .catch((err) => {
