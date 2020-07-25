@@ -83,9 +83,16 @@ exports.buySymbol = (req, res) => {
           // conferindo se o usuário tem saldo para a transação
           caixaAntigo = doc.data().caixa;
           if (newTransaction.total > caixaAntigo) {
-            return res
-              .status(400)
-              .json({ caixa: "Saldo não é suficiente para a transação." });
+            return res.status(400).json({
+              message: `Saldo não é suficiente para a transação. Você tem ${real(
+                caixaAntigo
+              )} de saldo e essa transação custaria ${real(
+                newTransaction.total
+              )}`,
+              caixa: caixaAntigo,
+              transactionTotal: newTransaction.total,
+              type: "Saldo insuficiente",
+            });
           } else {
             // se ele tiver, criar o documento da transação
             db.collection("transactions")
