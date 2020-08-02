@@ -4,6 +4,7 @@ div.inputError {
 
 div.inputError p {
   margin-bottom: 0px;
+  font-size: 1.4rem;
 }
 
 .form-control.error {
@@ -20,10 +21,12 @@ div.inputError p {
 
 label.form-label {
   margin-top: 1rem;
+  font-size: 1.8rem;
 }
 
 button.loginButton.btn.btn-outline-info {
   margin-top: 1rem;
+  font-size: 1.4rem;
 }
 
 div.buttonAndSpinner {
@@ -34,4 +37,27 @@ div.buttonAndSpinner {
 .progressSpinner {
   margin-top: 1rem;
   margin-left: 10px;
+}
+
+.loginForm {
+  background-color: rgb(52, 58, 54);
+  border-radius: 0.8rem;
+  margin: auto;
+  margin-top: 4.8rem;
+  padding: 1.6rem 4.8rem;
+  width: 50%;
+  align-self: center;
+  color: white;
+}
+
+h1.formTitle {
+  font-size: 4rem;
+}
+
+input.form-control {
+  font-size: 1.4rem;
+}
+
+small {
+  font-size: 1.3rem;
 }
