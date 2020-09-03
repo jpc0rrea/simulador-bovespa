@@ -1,6 +1,8 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
 
+import './Messages/styles.css'
+
 function ExpiredSessionMessage(props) {
   function handleCloseButton() {
     localStorage.removeItem("token");

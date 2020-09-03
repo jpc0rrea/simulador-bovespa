@@ -3,6 +3,8 @@ import { Modal, Button } from "react-bootstrap";
 
 import real from "../services/real";
 
+import './Messages/styles.css'
+
 function SellConfirmation(props) {
   const [companyName] = useState(props.companyName);
   const [price] = useState(props.price);
