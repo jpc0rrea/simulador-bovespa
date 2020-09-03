@@ -35,3 +35,7 @@ div.buttonAndSpinner {
   margin-top: 1rem;
   margin-left: 10px;
 }
+
+div.loginForm {
+    margin-bottom: 4rem
+}

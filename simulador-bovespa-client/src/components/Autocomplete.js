@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Form } from "react-bootstrap";
 
+import './Autocomplete/styles.css'
+
 function Autocomplete(props) {
   const [label] = useState(props.label);
   const [placeholder] = useState(props.placeholder);

@@ -61,3 +61,14 @@ input.form-control {
 small {
   font-size: 1.3rem;
 }
+
+@media (max-width: 570px) {
+    .loginForm {
+        width: 70%;
+        padding: 1.2rem 3rem
+    }
+
+    small {
+        font-size: 1.6rem
+    }
+}

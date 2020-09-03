@@ -7,10 +7,6 @@ body {
   font-size: 62.5%;
 }
 
-nav.navbar.navbar-expand.navbar-dark.bg-dark {
-  font-size: 1.6rem;
-}
-
 a.navbar-brand {
   font-size: 2rem;
 }
@@ -64,16 +60,6 @@ div.fade.alert.alert-danger.alert-dismissible.show {
 @media (max-width: 570px) {
   html {
     font-size: 45%;
-  }
-
-  .loginForm {
-    width: 70%;
-  }
-}
-
-@media (max-width: 350px) {
-  html {
-    font-size: 35%;
   }
 }
 
