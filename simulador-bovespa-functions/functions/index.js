@@ -27,7 +27,8 @@ const {
   uploadImage,
   addUserDetails,
   getAuthenticatedUser,
-  getCaixa
+  getCaixa,
+  changePassword
 } = require("./handlers/users");
 
 const { getAllCompanies } = require("./handlers/companies");
@@ -48,6 +49,7 @@ app.post("/user/image", FBAuth, uploadImage);
 app.post("/user", FBAuth, addUserDetails);
 app.get("/user", FBAuth, getAuthenticatedUser);
 app.get("/caixa", FBAuth, getCaixa)
+app.get("/changePassword", changePassword)
 
 // company routes
 app.get("/companies", getAllCompanies);
