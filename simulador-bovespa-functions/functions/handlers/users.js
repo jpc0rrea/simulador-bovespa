@@ -195,5 +195,22 @@ exports.getAuthenticatedUser = (req, res) => {
 };
 
 exports.getCaixa = (req, res) => {
-    return res.json({caixa: req.user.caixa})
-}
+  return res.json({ caixa: req.user.caixa });
+};
+
+exports.changePassword = (req, res) => {
+  const email = req.body.email.trim();
+
+  firebase
+    .auth()
+    .sendPasswordResetEmail(email)
+    .then(() => {
+      return res.status(200).json({
+        message: "E-mail enviado com sucesso! Você já pode redefinir sua senha",
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};

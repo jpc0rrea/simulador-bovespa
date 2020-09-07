@@ -132,6 +132,10 @@ const Login = ({ history }) => {
           <small>
             Não tem uma conta? Cadastre-se <Link to="/signup">aqui</Link>
           </small>
+          <br />
+          <small>
+            Esqueceu sua senha? Redefina ela <Link to="/quote">aqui</Link>
+          </small>
           {/* <div className="loginWithGoogleAndFacebook">
               <Form.Text className="text-muted">Ou faça login com:</Form.Text>
               <div className="socialForms">
