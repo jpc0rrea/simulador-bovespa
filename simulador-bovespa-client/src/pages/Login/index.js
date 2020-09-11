@@ -134,7 +134,7 @@ const Login = ({ history }) => {
           </small>
           <br />
           <small>
-            Esqueceu sua senha? Redefina ela <Link to="/quote">aqui</Link>
+            Esqueceu sua senha? Redefina ela <Link to="/forgotpassword">aqui</Link>
           </small>
           {/* <div className="loginWithGoogleAndFacebook">
               <Form.Text className="text-muted">Ou faça login com:</Form.Text>

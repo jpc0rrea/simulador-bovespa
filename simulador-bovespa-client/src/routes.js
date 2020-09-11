@@ -9,6 +9,7 @@ import Buy from "./pages/Buy";
 import Sell from "./pages/Sell";
 import History from "./pages/History";
 import Quote from "./pages/Quote";
+import ForgotPassword from "./pages/ForgotPassword";
 
 const Routes = () => {
   return (
@@ -21,6 +22,7 @@ const Routes = () => {
         <Route exact path="/sell" component={Sell} />
         <Route exact path="/history" component={History} />
         <Route exact path="/quote" component={Quote} />
+        <Route exact path="/forgotpassword" component={ForgotPassword} />
       </Switch>
     </Router>
   );
